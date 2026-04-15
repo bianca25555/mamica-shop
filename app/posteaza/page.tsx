@@ -16,8 +16,8 @@ export default function Posteaza() {
   const [descriere, setDescriere] = useState("");
   const [locatie, setLocatie] = useState("");
   const [telefon, setTelefon] = useState("");
-  const [poza, setPoza] = useState<File | null>(null);
-  const [pozaPreview, setPozaPreview] = useState<string | null>(null);
+  const [poze, setPoze] = useState<File[]>([]);
+  const [pozePreviews, setPozePreviews] = useState<string[]>([]);
   const [eroare, setEroare] = useState("");
   const [trimis, setTrimis] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,12 +28,21 @@ export default function Posteaza() {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
   }, []);
 
-  const handlePoza = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPoza(file);
-      setPozaPreview(URL.createObjectURL(file));
+  const handlePoze = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (poze.length + files.length > 5) {
+      setEroare("Poti adauga maximum 5 poze.");
+      return;
     }
+    setEroare("");
+    setPoze((prev) => [...prev, ...files]);
+    setPozePreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
+    e.target.value = "";
+  };
+
+  const stergePoza = (index: number) => {
+    setPoze((prev) => prev.filter((_, i) => i !== index));
+    setPozePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
@@ -43,9 +52,10 @@ export default function Posteaza() {
       setEroare("Te rugam sa completezi toate campurile."); return;
     }
     setLoading(true);
-    let pozaUrl = null;
-    if (poza) {
-      const fileName = `${Date.now()}-${poza.name}`;
+
+    const pozeUrls: string[] = [];
+    for (const poza of poze) {
+      const fileName = `${Date.now()}-${Math.random()}-${poza.name}`;
       const { error: uploadError } = await supabase.storage
         .from("poze-anunturi")
         .upload(fileName, poza);
@@ -57,15 +67,18 @@ export default function Posteaza() {
       const { data: urlData } = supabase.storage
         .from("poze-anunturi")
         .getPublicUrl(fileName);
-      pozaUrl = urlData.publicUrl;
+      pozeUrls.push(urlData.publicUrl);
     }
+
     const { error } = await supabase.from("anunturi").insert({
       titlu, categorie,
       pret: parseFloat(pret),
       descriere, locatie, telefon,
-      imagine: pozaUrl,
+      imagine: pozeUrls[0] || null,
+      poze: pozeUrls,
       user_id: user.id,
     });
+
     setLoading(false);
     if (error) { setEroare("A aparut o eroare. Incearca din nou."); }
     else { setTrimis(true); }
@@ -154,25 +167,37 @@ export default function Posteaza() {
               placeholder="ex: 07xx xxx xxx"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
           </div>
+
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Fotografie</label>
-            <input type="file" accept="image/*" ref={fileInputRef} onChange={handlePoza} className="hidden" />
-            {pozaPreview ? (
-              <div className="relative">
-                <img src={pozaPreview} alt="preview" className="w-full h-48 object-cover rounded-xl" />
-                <button onClick={() => { setPoza(null); setPozaPreview(null); }}
-                  className="absolute top-2 right-2 bg-white rounded-full px-2 py-1 text-xs text-red-400 shadow">
-                  Sterge
-                </button>
-              </div>
-            ) : (
+            <label className="text-sm font-medium text-gray-600 mb-2 block">
+              Fotografii ({poze.length}/5)
+            </label>
+            <input type="file" accept="image/*" multiple ref={fileInputRef} onChange={handlePoze} className="hidden" />
+
+            {poze.length < 5 && (
               <div onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-pink-300">
-                <p className="text-4xl mb-2">📷</p>
-                <p className="text-gray-400 text-sm">Apasa pentru a adauga o fotografie</p>
+                className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-pink-300 mb-3">
+                <p className="text-3xl mb-1">📷</p>
+                <p className="text-gray-400 text-sm">Apasa pentru a adauga fotografii</p>
+                <p className="text-gray-300 text-xs mt-1">Poti adauga inca {5 - poze.length} poze</p>
+              </div>
+            )}
+
+            {pozePreviews.length > 0 && (
+              <div className="grid grid-cols-3 gap-2">
+                {pozePreviews.map((preview, index) => (
+                  <div key={index} className="relative">
+                    <img src={preview} alt={`poza ${index + 1}`} className="w-full h-24 object-cover rounded-xl" />
+                    <button onClick={() => stergePoza(index)}
+                      className="absolute top-1 right-1 bg-white rounded-full w-5 h-5 flex items-center justify-center text-red-400 shadow text-xs">
+                      ✕
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
           </div>
+
           <button onClick={handleSubmit} disabled={loading}
             className="w-full bg-pink-500 text-white py-4 rounded-xl font-medium hover:bg-pink-600 text-sm disabled:opacity-50">
             {loading ? "Se salveaza..." : "Posteaza anuntul"}

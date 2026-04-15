@@ -7,6 +7,8 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
   const { id } = use(params);
   const [anunt, setAnunt] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [pozaActiva, setPozaActiva] = useState(0);
+  const [pozaMarita, setPozaMarita] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -42,8 +44,21 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
     );
   }
 
+  const toatePoze = anunt.poze?.length > 0 ? anunt.poze : (anunt.imagine ? [anunt.imagine] : []);
+
   return (
     <main className="min-h-screen bg-pink-50">
+      {/* Poza marita - lightbox */}
+      {pozaMarita && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          onClick={() => setPozaMarita(null)}
+        >
+          <button className="absolute top-4 right-4 text-white text-3xl">✕</button>
+          <img src={pozaMarita} alt="poza marita" className="max-w-full max-h-full object-contain rounded-xl" />
+        </div>
+      )}
+
       <header className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold text-pink-500">Mom&amp;Baby</Link>
@@ -68,12 +83,32 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Imagine */}
-          <div className="bg-white rounded-3xl shadow-sm overflow-hidden h-80">
-            {anunt.imagine ? (
-              <img src={anunt.imagine} alt={anunt.titlu} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-8xl">🛍️</div>
+          {/* Galerie poze */}
+          <div>
+            <div
+              className="bg-white rounded-3xl shadow-sm overflow-hidden h-80 cursor-zoom-in"
+              onClick={() => toatePoze[pozaActiva] && setPozaMarita(toatePoze[pozaActiva])}
+            >
+              {toatePoze.length > 0 ? (
+                <img src={toatePoze[pozaActiva]} alt={anunt.titlu} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-8xl">🛍️</div>
+              )}
+            </div>
+            {toatePoze.length > 1 && (
+              <div className="flex gap-2 mt-3 overflow-x-auto">
+                {toatePoze.map((poza: string, index: number) => (
+                  <img
+                    key={index}
+                    src={poza}
+                    alt={`poza ${index + 1}`}
+                    onClick={() => setPozaActiva(index)}
+                    className={`w-16 h-16 object-cover rounded-xl cursor-pointer border-2 flex-shrink-0 ${
+                      pozaActiva === index ? "border-pink-500" : "border-transparent"
+                    }`}
+                  />
+                ))}
+              </div>
             )}
           </div>
 
