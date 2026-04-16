@@ -185,13 +185,18 @@ export default function Home() {
         )}
       </section>
 
-      <footer className="bg-white mt-16 py-8 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 text-center text-gray-400 text-sm">
-          <p className="font-bold text-pink-500 text-lg mb-2">Mom&amp;Baby</p>
-          <p>Platforma dedicata mamelor si copiilor din Romania</p>
-          <p className="mt-2">© 2024 Mom&amp;Baby. Toate drepturile rezervate.</p>
-        </div>
-      </footer>
+<footer className="bg-white mt-16 py-8 border-t border-gray-100">
+  <div className="max-w-6xl mx-auto px-4 text-center text-gray-400 text-sm">
+    <p className="font-bold text-pink-500 text-lg mb-2">Mom&amp;Baby</p>
+    <p>Platforma dedicata mamelor si copiilor din Romania</p>
+    <div className="flex justify-center gap-4 mt-3">
+      <Link href="/confidentialitate" className="hover:text-pink-500">Politica de confidentialitate</Link>
+      <span>·</span>
+      <Link href="/termeni" className="hover:text-pink-500">Termeni si conditii</Link>
+    </div>
+    <p className="mt-2">© 2024 Mom&amp;Baby. Toate drepturile rezervate.</p>
+  </div>
+</footer>
     </main>
   );
 }
