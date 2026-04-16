@@ -59,7 +59,9 @@ export default function Home() {
           <div className="flex gap-3 items-center">
             {user ? (
               <>
-                <span className="text-sm text-gray-600">👋 {user.email}</span>
+                <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500">
+                  Anunturile mele
+                </Link>
                 <button onClick={handleLogout}
                   className="px-4 py-2 text-pink-500 border border-pink-500 rounded-full text-sm hover:bg-pink-50">
                   Deconectare
