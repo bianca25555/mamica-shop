@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { supabase } from "../lib/supabase";
 import Link from "next/link";
 
 export default function Login() {
+  const searchParams = useSearchParams();
   const [mod, setMod] = useState("login");
   const [nume, setNume] = useState("");
   const [email, setEmail] = useState("");
@@ -12,6 +14,12 @@ export default function Login() {
   const [eroare, setEroare] = useState("");
   const [succes, setSucces] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Citește modul din URL (?mod=register)
+  useEffect(() => {
+    const modParam = searchParams.get("mod");
+    if (modParam === "register") setMod("register");
+  }, [searchParams]);
 
   const handleLogin = async () => {
     setEroare("");

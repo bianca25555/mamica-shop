@@ -103,7 +103,7 @@ export default function Home() {
             ) : (
               <>
                 <Link href="/login" className="px-4 py-2 text-gray-600 hover:text-pink-500 text-sm font-medium">Intra in cont</Link>
-                <Link href="/login" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">Inregistrare</Link>
+                <Link href="/login?mod=register" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">Inregistrare</Link>
               </>
             )}
           </div>
