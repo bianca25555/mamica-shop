@@ -274,7 +274,7 @@ export default function Home() {
               <Link href="/termeni" className="hover:text-pink-500">Termeni</Link>
             </div>
           </div>
-          <p className="text-center text-gray-300 text-xs mt-6">© 2024 Mom&amp;Baby. Toate drepturile rezervate.</p>
+          <p className="text-center text-gray-300 text-xs mt-6">© 2025 Mom&amp;Baby. Toate drepturile rezervate.</p>
         </div>
       </footer>
     </main>

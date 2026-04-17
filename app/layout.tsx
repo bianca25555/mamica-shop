@@ -1,3 +1,5 @@
+import TestBanner from './test-banner';
+import CookieBanner from './cookies-banner';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,10 +30,13 @@ export default function RootLayout({
       lang="ro"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <CookiesBanner />
-      </body>
+      <body>
+  <TestBanner />
+  {/* ...ce ai deja aici (navbar, etc)... */}
+  {children}
+  {/* ...footer dacă ai... */}
+  <CookieBanner />
+</body>
     </html>
   );
 }

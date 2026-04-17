@@ -1,74 +1,165 @@
-import Link from "next/link";
+// ConfidentialitatePage.jsx — Înlocuiește conținutul paginii /confidentialitate cu acest text
+// Adaptează structura la framework-ul tău (Next.js pages/app router)
 
-export default function Confidentialitate() {
+export default function ConfidentialitatePage() {
   return (
-    <main className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xs font-bold">M&B</span>
-            </div>
-            <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
-          </Link>
-        </div>
-      </header>
+    <div className="legal-page">
+      <a href="/">← Înapoi acasă</a>
 
-      <section className="max-w-3xl mx-auto px-4 py-10">
-        <div className="mb-6">
-          <Link href="/" className="text-sm text-gray-400 hover:text-pink-500">← Inapoi acasa</Link>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-8">Politica de Confidentialitate</h1>
+      <h1>Politica de Confidențialitate</h1>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 flex flex-col gap-6 text-gray-600 text-sm leading-relaxed">
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">1. Cine suntem</h2>
-            <p>Mom&Baby este o platforma online dedicata mamelor si copiilor din Romania, unde utilizatorii pot posta si cumpara produse pentru mame si copii.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">2. Ce date colectam</h2>
-            <p>Colectam urmatoarele date personale:</p>
-            <ul className="list-disc ml-5 mt-2 flex flex-col gap-1">
-              <li>Adresa de email (la inregistrare)</li>
-              <li>Numarul de telefon (la postarea unui anunt)</li>
-              <li>Localitatea (la postarea unui anunt)</li>
-              <li>Fotografiile produselor postate</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">3. De ce colectam aceste date</h2>
-            <p>Datele sunt colectate exclusiv pentru:</p>
-            <ul className="list-disc ml-5 mt-2 flex flex-col gap-1">
-              <li>Crearea si gestionarea contului tau</li>
-              <li>Publicarea anunturilor tale pe platforma</li>
-              <li>Facilitarea contactului intre cumparatori si vanzatori</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">4. Cat timp pastram datele</h2>
-            <p>Datele tale sunt pastrate atat timp cat contul tau este activ. La stergerea contului, toate datele asociate vor fi eliminate din sistemele noastre.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">5. Drepturile tale</h2>
-            <p>Conform GDPR, ai urmatoarele drepturi:</p>
-            <ul className="list-disc ml-5 mt-2 flex flex-col gap-1">
-              <li>Dreptul de acces la datele tale</li>
-              <li>Dreptul de rectificare a datelor incorecte</li>
-              <li>Dreptul de stergere a datelor</li>
-              <li>Dreptul de portabilitate a datelor</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">6. Cookie-uri</h2>
-            <p>Folosim cookie-uri strict necesare pentru functionarea platformei (autentificare). Nu folosim cookie-uri de tracking sau publicitate.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">7. Contact</h2>
-            <p>Pentru orice intrebare legata de datele tale personale, ne poti contacta la: contact@momandbaby.ro</p>
-          </div>
-          <p className="text-gray-300 text-xs">Ultima actualizare: Aprilie 2024</p>
-        </div>
-      </section>
-    </main>
+      <p>
+        <strong>Ultima actualizare:</strong> Aprilie 2025
+      </p>
+
+      <div
+        style={{
+          background: '#FFF3CD',
+          border: '1px solid #F7C948',
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '24px',
+          fontSize: '14px',
+        }}
+      >
+        <strong>⚠️ Notă importantă:</strong> Mom&Baby se află în prezent în{' '}
+        <strong>faza de testare (beta)</strong>. Platforma nu facilitează
+        tranzacții reale și nu este operată de o entitate juridică înregistrată.
+        Datele colectate în această fază sunt utilizate exclusiv pentru
+        dezvoltarea și testarea platformei.
+      </div>
+
+      <h2>1. Cine suntem</h2>
+      <p>
+        Mom&Baby este un proiect aflat în faza de dezvoltare și testare — o
+        platformă online dedicată mamelor și copiilor din România. În prezent,
+        platforma nu este operată de o persoană juridică sau fizică autorizată
+        (PFA/SRL). La lansarea oficială, această secțiune va fi actualizată cu
+        datele complete ale operatorului de date.
+      </p>
+
+      <h2>2. Ce date colectăm</h2>
+      <p>În faza de testare, putem colecta următoarele date:</p>
+      <ul>
+        <li>Adresa de email (la înregistrare)</li>
+        <li>Numărul de telefon (la postarea unui anunț de test)</li>
+        <li>Localitatea (la postarea unui anunț de test)</li>
+        <li>Fotografiile produselor postate (în scop demonstrativ)</li>
+      </ul>
+
+      <h2>3. Temeiul juridic al prelucrării (Art. 6 GDPR)</h2>
+      <p>Prelucrăm datele tale pe baza următoarelor temeiuri juridice:</p>
+      <ul>
+        <li>
+          <strong>Consimțământul tău</strong> (Art. 6 alin. 1 lit. a GDPR) —
+          acordat la crearea contului și postarea de anunțuri
+        </li>
+        <li>
+          <strong>Interesul nostru legitim</strong> (Art. 6 alin. 1 lit. f
+          GDPR) — pentru dezvoltarea și îmbunătățirea platformei în faza de
+          testare
+        </li>
+      </ul>
+
+      <h2>4. Cui transmitem datele</h2>
+      <p>Datele tale pot fi accesate de:</p>
+      <ul>
+        <li>
+          <strong>Vercel Inc.</strong> (SUA) — serviciul de hosting al
+          platformei. Transferul de date către SUA este protejat prin Clauze
+          Contractuale Standard (SCC) conform Art. 46 GDPR.
+        </li>
+        <li>
+          <strong>Supabase Inc.</strong> — pentru stocarea bazei de date,
+          autentificarea utilizatorilor și stocarea fișierelor (fotografii
+          produse). Datele sunt stocate pe servere AWS în{' '}
+          <strong>Irlanda (UE)</strong>, deci nu are loc un transfer
+          internațional de date în afara Spațiului Economic European.
+        </li>
+      </ul>
+
+      <h2>5. Cât timp păstrăm datele</h2>
+      <p>
+        Datele tale sunt păstrate pe durata fazei de testare. La lansarea
+        oficială sau la încheierea proiectului, toate datele de test vor fi
+        șterse. Poți solicita ștergerea datelor tale oricând.
+      </p>
+
+      <h2>6. Drepturile tale (conform GDPR)</h2>
+      <p>Ai următoarele drepturi:</p>
+      <ul>
+        <li>
+          <strong>Dreptul de acces</strong> — poți solicita o copie a datelor
+          tale
+        </li>
+        <li>
+          <strong>Dreptul de rectificare</strong> — poți cere corectarea datelor
+          incorecte
+        </li>
+        <li>
+          <strong>Dreptul de ștergere</strong> — poți cere ștergerea completă a
+          datelor tale
+        </li>
+        <li>
+          <strong>Dreptul de restricționare</strong> — poți limita modul în care
+          îți prelucrăm datele
+        </li>
+        <li>
+          <strong>Dreptul de portabilitate</strong> — poți primi datele tale
+          într-un format structurat
+        </li>
+        <li>
+          <strong>Dreptul de opoziție</strong> — te poți opune prelucrării
+          datelor tale
+        </li>
+        <li>
+          <strong>Dreptul de a retrage consimțământul</strong> — oricând, fără a
+          afecta legalitatea prelucrării anterioare
+        </li>
+      </ul>
+      <p>
+        Pentru exercitarea acestor drepturi, contactează-ne la adresa de email
+        de mai jos.
+      </p>
+
+      <h2>7. Cookie-uri</h2>
+      <p>
+        Folosim exclusiv cookie-uri strict necesare pentru funcționarea
+        platformei (autentificare, sesiune). Nu folosim cookie-uri de tracking,
+        analiză sau publicitate.
+      </p>
+
+      <h2>8. Plângeri</h2>
+      <p>
+        Dacă consideri că datele tale sunt prelucrate incorect, ai dreptul de a
+        depune o plângere la:
+      </p>
+      <p>
+        <strong>
+          Autoritatea Națională de Supraveghere a Prelucrării Datelor cu
+          Caracter Personal (ANSPDCP)
+        </strong>
+        <br />
+        B-dul G-ral. Gheorghe Magheru 28-30, Sector 1, București
+        <br />
+        Website:{' '}
+        <a
+          href="https://www.dataprotection.ro"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          www.dataprotection.ro
+        </a>
+        <br />
+        Email: anspdcp@dataprotection.ro
+      </p>
+
+      <h2>9. Contact</h2>
+      <p>
+        Pentru orice întrebare legată de datele tale personale:
+        <br />
+        📧 <strong>contact@momandbaby.ro</strong>
+      </p>
+    </div>
   );
 }

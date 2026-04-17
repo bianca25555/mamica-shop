@@ -1,72 +1,152 @@
-import Link from "next/link";
+// TermeniPage.jsx — Înlocuiește conținutul paginii /termeni cu acest text
+// Adaptează structura la framework-ul tău (Next.js pages/app router)
 
-export default function Termeni() {
+export default function TermeniPage() {
   return (
-    <main className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xs font-bold">M&B</span>
-            </div>
-            <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
-          </Link>
-        </div>
-      </header>
+    <div className="legal-page">
+      <a href="/">← Înapoi acasă</a>
 
-      <section className="max-w-3xl mx-auto px-4 py-10">
-        <div className="mb-6">
-          <Link href="/" className="text-sm text-gray-400 hover:text-pink-500">← Inapoi acasa</Link>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-8">Termeni si Conditii</h1>
+      <h1>Termeni și Condiții</h1>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 flex flex-col gap-6 text-gray-600 text-sm leading-relaxed">
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">1. Acceptarea termenilor</h2>
-            <p>Prin utilizarea platformei Mom&Baby, accepti acesti termeni si conditii. Daca nu esti de acord, te rugam sa nu folosesti platforma.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">2. Descrierea serviciului</h2>
-            <p>Mom&Baby este o platforma de anunturi online dedicata mamelor si copiilor. Platforma faciliteaza contactul intre vanzatori si cumparatori, fara a fi parte in tranzactii.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">3. Reguli pentru anunturi</h2>
-            <ul className="list-disc ml-5 mt-2 flex flex-col gap-1">
-              <li>Anunturile trebuie sa fie reale si sa descrie corect produsul</li>
-              <li>Sunt permise doar produse pentru mame si copii</li>
-              <li>Sunt interzise produsele contrafacute sau ilegale</li>
-              <li>Fotografiile trebuie sa apartina produsului real</li>
-              <li>Un utilizator poate posta maximum 20 de anunturi active</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">4. Raspunderea utilizatorilor</h2>
-            <p>Utilizatorii sunt singurii responsabili pentru continutul anunturilor postate. Mom&Baby nu isi asuma responsabilitatea pentru tranzactiile efectuate intre utilizatori.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">5. Continut interzis</h2>
-            <ul className="list-disc ml-5 mt-2 flex flex-col gap-1">
-              <li>Produse periculoase pentru copii</li>
-              <li>Continut ofensator sau inadecvat</li>
-              <li>Spam sau anunturi duplicate</li>
-              <li>Informatii false sau inselatoare</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">6. Moderare</h2>
-            <p>Mom&Baby isi rezerva dreptul de a sterge orice anunt care incalca acesti termeni, fara notificare prealabila.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">7. Modificarea termenilor</h2>
-            <p>Ne rezervam dreptul de a modifica acesti termeni oricand. Continuarea utilizarii platformei dupa modificari constituie acceptarea noilor termeni.</p>
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-gray-800 mb-2">8. Contact</h2>
-            <p>Pentru intrebari: contact@momandbaby.ro</p>
-          </div>
-          <p className="text-gray-300 text-xs">Ultima actualizare: Aprilie 2024</p>
-        </div>
-      </section>
-    </main>
+      <p>
+        <strong>Ultima actualizare:</strong> Aprilie 2025
+      </p>
+
+      <div
+        style={{
+          background: '#FFF3CD',
+          border: '1px solid #F7C948',
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '24px',
+          fontSize: '14px',
+        }}
+      >
+        <strong>⚠️ Notă importantă:</strong> Mom&Baby se află în prezent în{' '}
+        <strong>faza de testare (beta)</strong>. Funcționalitățile platformei
+        sunt demonstrate în scop de dezvoltare. Nu se efectuează tranzacții
+        reale prin intermediul platformei.
+      </div>
+
+      <h2>1. Acceptarea termenilor</h2>
+      <p>
+        Prin utilizarea platformei Mom&Baby, accepți acești termeni și condiții.
+        Dacă nu ești de acord, te rugăm să nu folosești platforma. Platforma se
+        află în <strong>faza de testare (beta)</strong> și nu facilitează
+        tranzacții comerciale reale.
+      </p>
+
+      <h2>2. Descrierea serviciului</h2>
+      <p>
+        Mom&Baby este o platformă demonstrativă de anunțuri online dedicată
+        mamelor și copiilor. În faza actuală de testare:
+      </p>
+      <ul>
+        <li>Platforma nu este operată de o entitate juridică înregistrată</li>
+        <li>Nu se efectuează și nu se facilitează tranzacții reale</li>
+        <li>
+          Anunțurile postate au scop exclusiv de testare a funcționalităților
+        </li>
+        <li>
+          Platforma nu percepe comisioane, taxe sau alte plăți de la utilizatori
+        </li>
+      </ul>
+      <p>
+        La lansarea oficială, acești termeni vor fi actualizați cu datele
+        complete ale operatorului și condițiile comerciale aplicabile.
+      </p>
+
+      <h2>3. Reguli pentru anunțuri</h2>
+      <ul>
+        <li>Anunțurile trebuie să fie reale și să descrie corect produsul</li>
+        <li>Sunt permise doar produse pentru mame și copii</li>
+        <li>Sunt interzise produsele contrafăcute sau ilegale</li>
+        <li>Fotografiile trebuie să aparțină produsului real</li>
+        <li>Un utilizator poate posta maximum 20 de anunțuri active</li>
+      </ul>
+
+      <h2>4. Răspunderea utilizatorilor</h2>
+      <p>
+        Utilizatorii sunt singurii responsabili pentru conținutul anunțurilor
+        postate. Mom&Baby nu își asumă responsabilitatea pentru eventualele
+        contacte sau aranjamente stabilite între utilizatori în afara
+        platformei.
+      </p>
+
+      <h2>5. Conținut interzis</h2>
+      <ul>
+        <li>Produse periculoase pentru copii</li>
+        <li>Conținut ofensator sau inadecvat</li>
+        <li>Spam sau anunțuri duplicate</li>
+        <li>Informații false sau înșelătoare</li>
+        <li>
+          Produse care nu aparțin categoriei mamă și copil (off-topic)
+        </li>
+      </ul>
+
+      <h2>6. Protecția datelor personale</h2>
+      <p>
+        Prelucrarea datelor tale personale este descrisă în{' '}
+        <a href="/confidentialitate">Politica de Confidențialitate</a>. Datele
+        colectate în faza de testare vor fi șterse la încheierea perioadei de
+        test sau la solicitarea ta.
+      </p>
+
+      <h2>7. Limitarea răspunderii</h2>
+      <p>
+        Platforma este oferită „ca atare" (as is), fără garanții de
+        disponibilitate, acuratețe sau funcționalitate completă. În faza de
+        testare, pot apărea erori, întreruperi sau pierderi de date.
+      </p>
+
+      <h2>8. Moderare</h2>
+      <p>
+        Mom&Baby își rezervă dreptul de a șterge orice anunț care încalcă
+        acești termeni, fără notificare prealabilă.
+      </p>
+
+      <h2>9. Soluționarea litigiilor</h2>
+      <p>
+        La lansarea oficială, platforma va respecta legislația română privind
+        protecția consumatorilor, inclusiv:
+      </p>
+      <ul>
+        <li>
+          <strong>ANPC</strong> — Autoritatea Națională pentru Protecția
+          Consumatorilor:{' '}
+          <a
+            href="https://www.anpc.gov.ro"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            www.anpc.gov.ro
+          </a>
+        </li>
+        <li>
+          <strong>Platforma SOL</strong> — Soluționarea Online a Litigiilor
+          (Regulamentul UE 524/2013):{' '}
+          <a
+            href="https://ec.europa.eu/consumers/odr"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ec.europa.eu/consumers/odr
+          </a>
+        </li>
+      </ul>
+
+      <h2>10. Modificarea termenilor</h2>
+      <p>
+        Ne rezervăm dreptul de a modifica acești termeni oricând. Continuarea
+        utilizării platformei după modificări constituie acceptarea noilor
+        termeni. Utilizatorii vor fi notificați prin banner pe platformă în
+        cazul modificărilor semnificative.
+      </p>
+
+      <h2>11. Contact</h2>
+      <p>
+        Pentru întrebări: 📧 <strong>contact@momandbaby.ro</strong>
+      </p>
+    </div>
   );
 }
