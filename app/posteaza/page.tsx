@@ -30,10 +30,7 @@ export default function Posteaza() {
 
   const handlePoze = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (poze.length + files.length > 5) {
-      setEroare("Poti adauga maximum 5 poze.");
-      return;
-    }
+    if (poze.length + files.length > 5) { setEroare("Poti adauga maximum 5 poze."); return; }
     setEroare("");
     setPoze((prev) => [...prev, ...files]);
     setPozePreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
@@ -52,47 +49,34 @@ export default function Posteaza() {
       setEroare("Te rugam sa completezi toate campurile."); return;
     }
     setLoading(true);
-
     const pozeUrls: string[] = [];
     for (const poza of poze) {
       const fileName = `${Date.now()}-${Math.random()}-${poza.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("poze-anunturi")
-        .upload(fileName, poza);
-      if (uploadError) {
-        setEroare("Eroare la upload poza. Incearca din nou.");
-        setLoading(false);
-        return;
-      }
-      const { data: urlData } = supabase.storage
-        .from("poze-anunturi")
-        .getPublicUrl(fileName);
+      const { error: uploadError } = await supabase.storage.from("poze-anunturi").upload(fileName, poza);
+      if (uploadError) { setEroare("Eroare la upload poza."); setLoading(false); return; }
+      const { data: urlData } = supabase.storage.from("poze-anunturi").getPublicUrl(fileName);
       pozeUrls.push(urlData.publicUrl);
     }
-
     const { error } = await supabase.from("anunturi").insert({
-      titlu, categorie,
-      pret: parseFloat(pret),
-      descriere, locatie, telefon,
-      imagine: pozeUrls[0] || null,
-      poze: pozeUrls,
-      user_id: user.id,
+      titlu, categorie, pret: parseFloat(pret), descriere, locatie, telefon,
+      imagine: pozeUrls[0] || null, poze: pozeUrls, user_id: user.id,
     });
-
     setLoading(false);
-    if (error) { setEroare("A aparut o eroare. Incearca din nou."); }
-    else { setTrimis(true); }
+    if (error) setEroare("A aparut o eroare. Incearca din nou.");
+    else setTrimis(true);
   };
 
   if (trimis) {
     return (
-      <main className="min-h-screen bg-pink-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-3xl shadow-md w-full max-w-md p-8 text-center">
-          <div className="text-6xl mb-4">🎉</div>
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm w-full max-w-md p-8 text-center">
+          <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-3xl">✅</span>
+          </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Anunt postat!</h2>
           <p className="text-gray-400 text-sm mb-6">Anuntul tau a fost salvat cu succes.</p>
-          <Link href="/" className="inline-block bg-pink-500 text-white px-8 py-3 rounded-full text-sm hover:bg-pink-600">
-            Inapoi la pagina principala
+          <Link href="/" className="inline-block bg-pink-500 text-white px-8 py-3 rounded-xl text-sm font-semibold hover:bg-pink-600">
+            Inapoi acasa
           </Link>
         </div>
       </main>
@@ -100,43 +84,42 @@ export default function Posteaza() {
   }
 
   return (
-    <main className="min-h-screen bg-pink-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-pink-500">Mom&amp;Baby</Link>
-          <div className="flex gap-3">
-            {user ? (
-              <span className="text-sm text-gray-600">👋 {user.email}</span>
-            ) : (
-              <Link href="/login" className="px-4 py-2 bg-pink-500 text-white rounded-full text-sm hover:bg-pink-600">
-                Intra in cont
-              </Link>
-            )}
-          </div>
+    <main className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
+              <span className="text-white text-xs font-bold">M&B</span>
+            </div>
+            <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
+          </Link>
+          {user && <span className="text-sm text-gray-500">{user.email}</span>}
         </div>
       </header>
 
-      <section className="max-w-2xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">Posteaza un anunt</h2>
-        <p className="text-gray-400 text-sm mb-8">Completeaza formularul de mai jos pentru a-ti lista produsul.</p>
+      <section className="max-w-2xl mx-auto px-4 py-10">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Posteaza un anunt</h1>
+          <p className="text-gray-400 text-sm mt-1">Completeaza detaliile produsului tau</p>
+        </div>
 
         {!user && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mb-6 text-sm text-yellow-700">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 text-sm text-yellow-700">
             Trebuie sa fii <Link href="/login" className="underline font-medium">logat</Link> pentru a posta un anunt.
           </div>
         )}
 
-        {eroare && <p className="text-red-400 text-sm mb-4">{eroare}</p>}
+        {eroare && <div className="bg-red-50 text-red-500 text-sm px-4 py-3 rounded-xl mb-4">{eroare}</div>}
 
-        <div className="bg-white rounded-3xl shadow-sm p-8 flex flex-col gap-6">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col gap-5">
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Titlu anunt *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Titlu anunt *</label>
             <input type="text" value={titlu} onChange={(e) => setTitlu(e.target.value)}
               placeholder="ex: Carucior Quinny Buzz, stare foarte buna"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Categorie *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Categorie *</label>
             <select value={categorie} onChange={(e) => setCategorie(e.target.value)}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
               <option value="">Selecteaza o categorie</option>
@@ -144,52 +127,47 @@ export default function Posteaza() {
             </select>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Pret (RON) *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Pret (RON) *</label>
             <input type="number" value={pret} onChange={(e) => setPret(e.target.value)}
               placeholder="ex: 150"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Descriere *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Descriere *</label>
             <textarea rows={4} value={descriere} onChange={(e) => setDescriere(e.target.value)}
               placeholder="Descrie produsul: stare, varsta, dimensiuni, alte detalii relevante..."
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 resize-none" />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Localitate *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Localitate *</label>
             <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)}
               placeholder="ex: Cluj-Napoca, Bucuresti, Timisoara"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">Numar de telefon *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Numar de telefon *</label>
             <input type="tel" value={telefon} onChange={(e) => setTelefon(e.target.value)}
               placeholder="ex: 07xx xxx xxx"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
-
           <div>
-            <label className="text-sm font-medium text-gray-600 mb-2 block">
-              Fotografii ({poze.length}/5)
-            </label>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">Fotografii ({poze.length}/5)</label>
             <input type="file" accept="image/*" multiple ref={fileInputRef} onChange={handlePoze} className="hidden" />
-
             {poze.length < 5 && (
               <div onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-pink-300 mb-3">
-                <p className="text-3xl mb-1">📷</p>
-                <p className="text-gray-400 text-sm">Apasa pentru a adauga fotografii</p>
+                className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-pink-300 hover:bg-pink-50 transition-all mb-3">
+                <p className="text-2xl mb-1">📷</p>
+                <p className="text-gray-500 text-sm font-medium">Apasa pentru a adauga fotografii</p>
                 <p className="text-gray-300 text-xs mt-1">Poti adauga inca {5 - poze.length} poze</p>
               </div>
             )}
-
             {pozePreviews.length > 0 && (
               <div className="grid grid-cols-3 gap-2">
                 {pozePreviews.map((preview, index) => (
                   <div key={index} className="relative">
                     <img src={preview} alt={`poza ${index + 1}`} className="w-full h-24 object-cover rounded-xl" />
                     <button onClick={() => stergePoza(index)}
-                      className="absolute top-1 right-1 bg-white rounded-full w-5 h-5 flex items-center justify-center text-red-400 shadow text-xs">
+                      className="absolute top-1 right-1 bg-white rounded-full w-6 h-6 flex items-center justify-center text-red-400 shadow text-xs font-bold">
                       ✕
                     </button>
                   </div>
@@ -197,9 +175,8 @@ export default function Posteaza() {
               </div>
             )}
           </div>
-
           <button onClick={handleSubmit} disabled={loading}
-            className="w-full bg-pink-500 text-white py-4 rounded-xl font-medium hover:bg-pink-600 text-sm disabled:opacity-50">
+            className="w-full bg-pink-500 text-white py-3 rounded-xl font-semibold hover:bg-pink-600 text-sm disabled:opacity-50 mt-2">
             {loading ? "Se salveaza..." : "Posteaza anuntul"}
           </button>
         </div>
