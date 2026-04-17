@@ -102,13 +102,17 @@ export default function AnunturileMele() {
                 </div>
                 <div className="flex flex-col gap-2 flex-shrink-0">
                   <Link href={`/anunt/${anunt.id}`}
-                    className="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-medium hover:bg-gray-50 text-center">
-                    Vezi
-                  </Link>
-                  <button onClick={() => stergeAnunt(anunt.id)}
-                    className="px-4 py-2 border border-red-100 text-red-400 rounded-xl text-xs font-medium hover:bg-red-50">
-                    Sterge
-                  </button>
+  className="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-medium hover:bg-gray-50 text-center">
+  Vezi
+</Link>
+<Link href={`/editeaza/${anunt.id}`}
+  className="px-4 py-2 border border-pink-200 text-pink-500 rounded-xl text-xs font-medium hover:bg-pink-50 text-center">
+  Editeaza
+</Link>
+<button onClick={() => stergeAnunt(anunt.id)}
+  className="px-4 py-2 border border-red-100 text-red-400 rounded-xl text-xs font-medium hover:bg-red-50">
+  Sterge
+</button>
                 </div>
               </div>
             ))}

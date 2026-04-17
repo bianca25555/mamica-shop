@@ -224,7 +224,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 bg-pink-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xs font-bold">M</span>
+                <span className="text-white text-xs font-bold">M&B</span>
               </div>
               <span className="font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
             </div>
