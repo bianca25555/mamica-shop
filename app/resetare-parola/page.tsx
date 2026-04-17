@@ -14,7 +14,7 @@ export default function ResetareParola() {
     if (!email) { setEroare("Te rugam sa introduci emailul."); return; }
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/parola-noua`,
+      redirectTo: `https://mamica-shop.vercel.app/parola-noua`,
     });
     setLoading(false);
     if (error) setEroare("A aparut o eroare. Verifica emailul introdus.");
