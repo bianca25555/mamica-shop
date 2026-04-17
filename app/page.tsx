@@ -74,7 +74,8 @@ export default function Home() {
             <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
               <span className="text-white text-xs font-bold">M&B</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
+            <span className="text-lg font-bold text-gray-800 hidden sm:block">Mom<span className="text-pink-500">&</span>Baby</span>
+<span className="text-lg font-bold text-gray-800 sm:hidden">M<span className="text-pink-500">&</span>B</span>
           </Link>
 
           <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
