@@ -5,6 +5,7 @@ import { supabase } from "./lib/supabase";
 
 const categoriiMama = ["Alaptat", "Burtiere si Maternitate", "Ingrijire postnatala", "Moda gravide"];
 const categoriiCopil = ["Hainute", "Carucioare", "Jucarii", "Mobilier camera", "Hranire", "Siguranta", "Carti si Educatie", "Accesorii"];
+const toateCategoriile = [...categoriiMama, ...categoriiCopil];
 
 export default function Home() {
   const [user, setUser] = useState<any>(null);
@@ -12,6 +13,11 @@ export default function Home() {
   const [anunturiAfisate, setAnunturiAfisate] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [cautare, setCautare] = useState("");
+  const [filtreVizibile, setFiltreVizibile] = useState(true);
+  const [pretMin, setPretMin] = useState("");
+  const [pretMax, setPretMax] = useState("");
+  const [locatie, setLocatie] = useState("");
+  const [categorieFiltru, setCategorieFiltru] = useState("");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -20,18 +26,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (cautare.trim() === "") {
-      setAnunturiAfisate(anunturi);
-    } else {
+    let rezultate = anunturi;
+    if (cautare.trim()) {
       const t = cautare.toLowerCase();
-      setAnunturiAfisate(anunturi.filter(a =>
+      rezultate = rezultate.filter(a =>
         a.titlu?.toLowerCase().includes(t) ||
         a.categorie?.toLowerCase().includes(t) ||
         a.descriere?.toLowerCase().includes(t) ||
         a.locatie?.toLowerCase().includes(t)
-      ));
+      );
     }
-  }, [cautare, anunturi]);
+    if (categorieFiltru) rezultate = rezultate.filter(a => a.categorie === categorieFiltru);
+    if (pretMin) rezultate = rezultate.filter(a => a.pret >= parseFloat(pretMin));
+    if (pretMax) rezultate = rezultate.filter(a => a.pret <= parseFloat(pretMax));
+    if (locatie.trim()) rezultate = rezultate.filter(a => a.locatie?.toLowerCase().includes(locatie.toLowerCase()));
+    setAnunturiAfisate(rezultate);
+  }, [cautare, anunturi, categorieFiltru, pretMin, pretMax, locatie]);
 
   const fetchAnunturi = async () => {
     const { data } = await supabase.from("anunturi").select("*").order("created_at", { ascending: false }).limit(50);
@@ -45,6 +55,16 @@ export default function Home() {
     setUser(null);
   };
 
+  const resetFiltre = () => {
+    setCautare("");
+    setCategorieFiltru("");
+    setPretMin("");
+    setPretMax("");
+    setLocatie("");
+  };
+
+  const areFiltreActive = cautare || categorieFiltru || pretMin || pretMax || locatie;
+
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -52,7 +72,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
-            <span className="text-white text-xs font-bold">M&B</span>
+              <span className="text-white text-xs font-bold">M&B</span>
             </div>
             <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
           </Link>
@@ -62,13 +82,8 @@ export default function Home() {
               <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input
-                type="text"
-                value={cautare}
-                onChange={(e) => setCautare(e.target.value)}
-                placeholder="Cauta produse..."
-                className="flex-1 bg-transparent outline-none text-gray-600 text-sm"
-              />
+              <input type="text" value={cautare} onChange={(e) => setCautare(e.target.value)}
+                placeholder="Cauta produse..." className="flex-1 bg-transparent outline-none text-gray-600 text-sm" />
               {cautare && <button onClick={() => setCautare("")} className="text-gray-400 hover:text-gray-600 text-sm">✕</button>}
             </div>
           </div>
@@ -82,18 +97,12 @@ export default function Home() {
                 <Link href="/posteaza" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
                   + Adauga anunt
                 </Link>
-                <button onClick={handleLogout} className="p-2 text-gray-400 hover:text-gray-600 text-sm">
-                  Iesire
-                </button>
+                <button onClick={handleLogout} className="p-2 text-gray-400 hover:text-gray-600 text-sm">Iesire</button>
               </>
             ) : (
               <>
-                <Link href="/login" className="px-4 py-2 text-gray-600 hover:text-pink-500 text-sm font-medium">
-                  Intra in cont
-                </Link>
-                <Link href="/login" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
-                  Inregistrare
-                </Link>
+                <Link href="/login" className="px-4 py-2 text-gray-600 hover:text-pink-500 text-sm font-medium">Intra in cont</Link>
+                <Link href="/login" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">Inregistrare</Link>
               </>
             )}
           </div>
@@ -102,29 +111,21 @@ export default function Home() {
 
       {/* Hero */}
       <section className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center gap-8">
-          <div className="flex-1 text-center md:text-left">
-            <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4">
-              🌸 Platforma #1 pentru mame din Romania
-            </span>
-            <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
-              Cumpara si vinde<br />
-              <span className="text-pink-500">pentru mamica si bebelus</span>
-            </h1>
-            <p className="text-gray-500 mb-8 text-lg">
-              Un loc unde gasesti tot ce ai nevoie ca mamica — de la produse noi si second-hand, pana la sfaturi si o comunitate de mame ca tine.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/posteaza" className="px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 text-center shadow-sm">
-                Posteaza un anunt
-              </Link>
-              <button onClick={() => document.getElementById('anunturi')?.scrollIntoView({behavior: 'smooth'})}
-                className="px-8 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 text-center">
-                Vezi anunturile
-              </button>
-            </div>
-          </div>
-          </div>
+        <div className="max-w-6xl mx-auto px-4 py-12 text-center">
+          <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+            🌸 Platforma #1 pentru mame din Romania
+          </span>
+          <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
+            Cumpara si vinde<br />
+            <span className="text-pink-500">pentru mamica si bebelus</span>
+          </h1>
+          <p className="text-gray-500 mb-8 text-lg max-w-xl mx-auto">
+            Un loc unde gasesti tot ce ai nevoie ca mamica — de la produse noi si second-hand, pana la sfaturi si o comunitate de mame ca tine.
+          </p>
+          <Link href="/posteaza" className="px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 shadow-sm">
+            Posteaza un anunt
+          </Link>
+        </div>
       </section>
 
       {/* Bara cautare mobil */}
@@ -140,14 +141,14 @@ export default function Home() {
       </div>
 
       {/* Categorii */}
-      {!cautare && (
+      {!areFiltreActive && (
         <section className="max-w-6xl mx-auto px-4 py-8">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Categorii</h2>
           <div className="mb-6">
             <p className="text-sm text-gray-500 font-medium mb-3">Pentru Mamica</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {categoriiMama.map((cat) => (
-                <button key={cat} onClick={() => setCautare(cat)}
+                <button key={cat} onClick={() => setCategorieFiltru(cat)}
                   className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 font-medium hover:border-pink-300 hover:text-pink-500 transition-all text-left">
                   {cat}
                 </button>
@@ -158,7 +159,7 @@ export default function Home() {
             <p className="text-sm text-gray-500 font-medium mb-3">Pentru Copil</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {categoriiCopil.map((cat) => (
-                <button key={cat} onClick={() => setCautare(cat)}
+                <button key={cat} onClick={() => setCategorieFiltru(cat)}
                   className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 font-medium hover:border-pink-300 hover:text-pink-500 transition-all text-left">
                   {cat}
                 </button>
@@ -168,28 +169,65 @@ export default function Home() {
         </section>
       )}
 
-      {/* Anunturi */}
-      <section id="anunturi" className="max-w-6xl mx-auto px-4 py-6">
+      {/* Filtre & Anunturi */}
+      <section className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-800">
-            {cautare ? `Rezultate pentru "${cautare}"` : "Anunturi recente"}
+            {areFiltreActive ? `${anunturiAfisate.length} rezultate` : "Anunturi recente"}
           </h2>
-          {cautare && (
-            <button onClick={() => setCautare("")} className="text-pink-500 text-sm hover:underline font-medium">
-              Sterge filtrul
+          <div className="flex gap-2">
+            {areFiltreActive && (
+              <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">
+                Sterge filtrele
+              </button>
+            )}
+            <button onClick={() => setFiltreVizibile(!filtreVizibile)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${filtreVizibile ? "bg-pink-500 text-white border-pink-500" : "bg-white text-gray-600 border-gray-200 hover:border-pink-300"}`}>
+              🔧 Filtre
             </button>
-          )}
-        </div>
-        {loading ? (
-          <div className="text-center py-16">
-            <p className="text-gray-400">Se incarca...</p>
           </div>
+        </div>
+
+        {/* Panou filtre */}
+        {filtreVizibile && (
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label className="text-xs font-medium text-gray-500 mb-1 block">Categorie</label>
+              <select value={categorieFiltru} onChange={(e) => setCategorieFiltru(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400 text-gray-600">
+                <option value="">Toate categoriile</option>
+                {toateCategoriile.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-medium text-gray-500 mb-1 block">Pret minim (RON)</label>
+              <input type="number" value={pretMin} onChange={(e) => setPretMin(e.target.value)}
+                placeholder="ex: 50"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400" />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-gray-500 mb-1 block">Pret maxim (RON)</label>
+              <input type="number" value={pretMax} onChange={(e) => setPretMax(e.target.value)}
+                placeholder="ex: 500"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400" />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-gray-500 mb-1 block">Localitate</label>
+              <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)}
+                placeholder="ex: Cluj, Bucuresti"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400" />
+            </div>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="text-center py-16"><p className="text-gray-400">Se incarca...</p></div>
         ) : anunturiAfisate.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
             <p className="text-4xl mb-3">🔍</p>
-            <p className="text-gray-500 mb-4">Nu am gasit anunturi pentru "{cautare}".</p>
-            <button onClick={() => setCautare("")} className="text-pink-500 text-sm hover:underline font-medium">
-              Vezi toate anunturile
+            <p className="text-gray-500 mb-4">Nu am gasit anunturi.</p>
+            <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">
+              Reseteaza filtrele
             </button>
           </div>
         ) : (
@@ -203,7 +241,7 @@ export default function Home() {
                     <img src={anunt.imagine} alt={anunt.titlu} className="w-full h-full object-cover"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl text-gray-300">📷</div>
+                    <div className="w-full h-full flex items-center justify-center text-gray-200 text-4xl">📷</div>
                   )}
                 </div>
                 <div className="p-3">
