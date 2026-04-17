@@ -80,13 +80,13 @@ export default function Login() {
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Email</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                   placeholder="exemplu@email.com"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 text-gray-800" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Parola</label>
                 <input type="password" value={parola} onChange={(e) => setParola(e.target.value)}
                   placeholder="Parola ta"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 text-gray-800" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
               </div>
               <button onClick={handleLogin} disabled={loading}
                 className="w-full bg-pink-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-pink-600 mt-2 disabled:opacity-50">
@@ -107,25 +107,25 @@ export default function Login() {
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Nume complet</label>
                 <input type="text" value={nume} onChange={(e) => setNume(e.target.value)}
                   placeholder="Numele tau"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 text-gray-800" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Email</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                   placeholder="exemplu@email.com"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 text-gray-800"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Parola</label>
                 <input type="password" value={parola} onChange={(e) => setParola(e.target.value)}
                   placeholder="Minimum 8 caractere"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 text-gray-800" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Confirma parola</label>
                 <input type="password" value={confirmaParola} onChange={(e) => setConfirmaParola(e.target.value)}
                   placeholder="Repeta parola"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 text-gray-800" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
               </div>
               <button onClick={handleRegister} disabled={loading}
                 className="w-full bg-pink-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-pink-600 mt-2 disabled:opacity-50">
