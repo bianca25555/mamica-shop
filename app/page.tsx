@@ -68,62 +68,62 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center group-hover:bg-pink-600 transition-colors">
               <span className="text-white text-xs font-bold">M&B</span>
             </div>
             <span className="text-lg font-bold text-gray-800 hidden sm:block">Mom<span className="text-pink-500">&</span>Baby</span>
-<span className="text-lg font-bold text-gray-800 sm:hidden">M<span className="text-pink-500">&</span>B</span>
+            <span className="text-lg font-bold text-gray-800 sm:hidden">M<span className="text-pink-500">&</span>B</span>
           </Link>
 
           <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-            <div className="flex items-center w-full bg-gray-100 rounded-xl px-3 py-2">
+            <div className="flex items-center w-full bg-gray-100 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-pink-200 transition-all">
               <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input type="text" value={cautare} onChange={(e) => setCautare(e.target.value)}
                 placeholder="Cauta produse..." className="flex-1 bg-transparent outline-none text-gray-600 text-sm" />
-              {cautare && <button onClick={() => setCautare("")} className="text-gray-400 hover:text-gray-600 text-sm">✕</button>}
+              {cautare && <button onClick={() => setCautare("")} className="text-gray-400 hover:text-gray-600 text-sm transition-colors">✕</button>}
             </div>
           </div>
 
           <div className="flex gap-2 items-center">
             {user ? (
               <>
-                <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium block px-3 py-2">
+                <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium block px-3 py-2 transition-colors">
                   Anunturile mele
                 </Link>
-                <Link href="/posteaza" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
+                <Link href="/posteaza" className="btn-animate px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
                   + Adauga anunt
                 </Link>
-                <button onClick={handleLogout} className="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm font-medium border border-gray-200 rounded-xl hover:bg-gray-50">Iesire</button>
+                <button onClick={handleLogout} className="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm font-medium border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">Iesire</button>
               </>
             ) : (
               <>
-                <Link href="/login" className="px-4 py-2 text-gray-600 hover:text-pink-500 text-sm font-medium">Intra in cont</Link>
-                <Link href="/login?mod=register" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">Inregistrare</Link>
+                <Link href="/login" className="px-4 py-2 text-gray-600 hover:text-pink-500 text-sm font-medium transition-colors">Intra in cont</Link>
+                <Link href="/login?mod=register" className="btn-animate px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">Inregistrare</Link>
               </>
             )}
           </div>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-12 text-center">
-          <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+      {/* 4. Hero cu gradient subtil */}
+      <section className="bg-gradient-to-br from-white via-pink-50/40 to-purple-50/30 border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 py-16 text-center animate-fade-in">
+          <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-4 py-1.5 rounded-full mb-5 border border-pink-100">
             🌸 Platforma #1 pentru mame din Romania
           </span>
-          <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight tracking-tight">
             Cumpara si vinde<br />
             <span className="text-pink-500">pentru mamica si bebelus</span>
           </h1>
-          <p className="text-gray-500 mb-8 text-lg max-w-xl mx-auto">
+          <p className="text-gray-500 mb-10 text-lg max-w-xl mx-auto leading-relaxed">
             Un loc unde gasesti tot ce ai nevoie ca mamica — de la produse noi si second-hand, pana la sfaturi si o comunitate de mame ca tine.
           </p>
-          <Link href="/posteaza" className="px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 shadow-sm">
+          <Link href="/posteaza" className="btn-animate inline-block px-8 py-3.5 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 text-base">
             Posteaza un anunt
           </Link>
         </div>
@@ -143,14 +143,14 @@ export default function Home() {
 
       {/* Categorii */}
       {!areFiltreActive && (
-        <section className="max-w-6xl mx-auto px-4 py-8">
+        <section className="max-w-6xl mx-auto px-4 py-8 animate-fade-in-delay-1">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Categorii</h2>
           <div className="mb-6">
             <p className="text-sm text-gray-500 font-medium mb-3">Pentru Mamica</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {categoriiMama.map((cat) => (
                 <button key={cat} onClick={() => setCategorieFiltru(cat)}
-                  className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 font-medium hover:border-pink-300 hover:text-pink-500 transition-all text-left">
+                  className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 font-medium hover:border-pink-300 hover:text-pink-500 hover:bg-pink-50/50 transition-all text-left">
                   {cat}
                 </button>
               ))}
@@ -161,7 +161,7 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {categoriiCopil.map((cat) => (
                 <button key={cat} onClick={() => setCategorieFiltru(cat)}
-                  className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 font-medium hover:border-pink-300 hover:text-pink-500 transition-all text-left">
+                  className="bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 font-medium hover:border-pink-300 hover:text-pink-500 hover:bg-pink-50/50 transition-all text-left">
                   {cat}
                 </button>
               ))}
@@ -171,7 +171,7 @@ export default function Home() {
       )}
 
       {/* Filtre & Anunturi */}
-      <section className="max-w-6xl mx-auto px-4 py-6">
+      <section className="max-w-6xl mx-auto px-4 py-6 animate-fade-in-delay-2">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-800">
             {areFiltreActive ? `${anunturiAfisate.length} rezultate` : "Anunturi recente"}
@@ -195,7 +195,7 @@ export default function Home() {
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Categorie</label>
               <select value={categorieFiltru} onChange={(e) => setCategorieFiltru(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 text-gray-600 transition-colors">
                 <option value="">Toate categoriile</option>
                 {toateCategoriile.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
               </select>
@@ -204,19 +204,19 @@ export default function Home() {
               <label className="text-xs font-medium text-gray-500 mb-1 block">Pret minim (RON)</label>
               <input type="number" value={pretMin} onChange={(e) => setPretMin(e.target.value)}
                 placeholder="ex: 50"
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 transition-colors" />
             </div>
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Pret maxim (RON)</label>
               <input type="number" value={pretMax} onChange={(e) => setPretMax(e.target.value)}
                 placeholder="ex: 500"
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 transition-colors" />
             </div>
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Localitate</label>
               <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)}
                 placeholder="ex: Cluj, Bucuresti"
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 transition-colors" />
             </div>
           </div>
         )}
@@ -233,13 +233,14 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {anunturiAfisate.map((anunt) => (
+            {anunturiAfisate.map((anunt, index) => (
               <Link key={anunt.id} href={`/anunt/${anunt.id}`}
-                className="bg-white rounded-2xl border border-gray-100 hover:border-pink-200 hover:shadow-md cursor-pointer overflow-hidden block transition-all">
+                className="card-hover bg-white rounded-2xl border border-gray-100 cursor-pointer overflow-hidden block"
+                style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="h-40 bg-gray-50 overflow-hidden">
                   {anunt.imagine ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={anunt.imagine} alt={anunt.titlu} className="w-full h-full object-cover"
+                    <img src={anunt.imagine} alt={anunt.titlu} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-200 text-4xl">📷</div>
@@ -257,24 +258,63 @@ export default function Home() {
         )}
       </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-100 mt-16 py-8">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-pink-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xs font-bold">M&B</span>
+      {/* 6. Footer mai bogat */}
+      <footer className="bg-white border-t border-gray-100 mt-16">
+        <div className="max-w-6xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Coloana 1 - Brand */}
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">M&B</span>
+                </div>
+                <span className="font-bold text-gray-800 text-lg">Mom<span className="text-pink-500">&</span>Baby</span>
               </div>
-              <span className="font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Platforma dedicata mamelor si copiilor din Romania. Cumpara si vinde cu incredere.
+              </p>
             </div>
-            <p className="text-gray-400 text-sm">Platforma dedicata mamelor si copiilor din Romania</p>
-            <div className="flex gap-4 text-sm text-gray-400">
-              <Link href="/confidentialitate" className="hover:text-pink-500">Confidentialitate</Link>
-              <span>·</span>
-              <Link href="/termeni" className="hover:text-pink-500">Termeni</Link>
+
+            {/* Coloana 2 - Platforma */}
+            <div>
+              <h3 className="font-semibold text-gray-800 text-sm mb-3">Platforma</h3>
+              <ul className="space-y-2">
+                <li><Link href="/posteaza" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">Posteaza un anunt</Link></li>
+                <li><Link href="/" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">Cauta produse</Link></li>
+                <li><Link href="/login?mod=register" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">Creeaza cont</Link></li>
+              </ul>
+            </div>
+
+            {/* Coloana 3 - Legal */}
+            <div>
+              <h3 className="font-semibold text-gray-800 text-sm mb-3">Legal</h3>
+              <ul className="space-y-2">
+                <li><Link href="/confidentialitate" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">Politica de confidentialitate</Link></li>
+                <li><Link href="/termeni" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">Termeni si conditii</Link></li>
+                <li><a href="https://www.anpc.gov.ro" target="_blank" rel="noopener noreferrer" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">ANPC</a></li>
+                <li><a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">Platforma SOL</a></li>
+              </ul>
+            </div>
+
+            {/* Coloana 4 - Contact */}
+            <div>
+              <h3 className="font-semibold text-gray-800 text-sm mb-3">Contact</h3>
+              <ul className="space-y-2">
+                <li><a href="mailto:contact@momandbaby.ro" className="text-gray-400 text-sm hover:text-pink-500 transition-colors">contact@momandbaby.ro</a></li>
+              </ul>
+              <div className="flex gap-3 mt-4">
+                <a href="#" className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 hover:bg-pink-50 hover:text-pink-500 transition-all text-sm">f</a>
+                <a href="#" className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 hover:bg-pink-50 hover:text-pink-500 transition-all text-sm">ig</a>
+                <a href="#" className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 hover:bg-pink-50 hover:text-pink-500 transition-all text-sm">tt</a>
+              </div>
             </div>
           </div>
-          <p className="text-center text-gray-300 text-xs mt-6">© 2025 Mom&amp;Baby. Toate drepturile rezervate.</p>
+
+          {/* Linia de jos */}
+          <div className="border-t border-gray-100 pt-6 flex flex-col md:flex-row items-center justify-between gap-2">
+            <p className="text-gray-300 text-xs">© 2025 Mom&amp;Baby. Toate drepturile rezervate.</p>
+            <p className="text-gray-300 text-xs">Facut cu 💕 pentru mamele din Romania</p>
+          </div>
         </div>
       </footer>
     </main>
