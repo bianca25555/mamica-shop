@@ -91,13 +91,13 @@ export default function Home() {
           <div className="flex gap-2 items-center">
             {user ? (
               <>
-                <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium hidden sm:block px-3 py-2">
+                <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium block px-3 py-2">
                   Anunturile mele
                 </Link>
                 <Link href="/posteaza" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
                   + Adauga anunt
                 </Link>
-                <button onClick={handleLogout} className="p-2 text-gray-400 hover:text-gray-600 text-sm">Iesire</button>
+                <button onClick={handleLogout} className="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm font-medium border border-gray-200 rounded-xl hover:bg-gray-50">Iesire</button>
               </>
             ) : (
               <>
@@ -194,7 +194,7 @@ export default function Home() {
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Categorie</label>
               <select value={categorieFiltru} onChange={(e) => setCategorieFiltru(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400 text-gray-600">
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
                 <option value="">Toate categoriile</option>
                 {toateCategoriile.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
               </select>
@@ -203,19 +203,19 @@ export default function Home() {
               <label className="text-xs font-medium text-gray-500 mb-1 block">Pret minim (RON)</label>
               <input type="number" value={pretMin} onChange={(e) => setPretMin(e.target.value)}
                 placeholder="ex: 50"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
             </div>
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Pret maxim (RON)</label>
               <input type="number" value={pretMax} onChange={(e) => setPretMax(e.target.value)}
                 placeholder="ex: 500"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
             </div>
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Localitate</label>
               <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)}
                 placeholder="ex: Cluj, Bucuresti"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-pink-400" />
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
             </div>
           </div>
         )}
