@@ -93,6 +93,11 @@ export default function Login() {
                 {loading ? "Se incarca..." : "Intra in cont"}
               </button>
               <p className="text-center text-sm text-gray-400">
+                <Link href="/resetare-parola" className="text-pink-500 hover:underline font-medium">
+                  Ai uitat parola?
+                </Link>
+              </p>
+              <p className="text-center text-sm text-gray-400">
                 Nu ai cont?{" "}
                 <button onClick={() => setMod("register")} className="text-pink-500 hover:underline font-medium">
                   Inregistreaza-te
