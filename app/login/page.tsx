@@ -39,7 +39,7 @@ function LoginForm() {
       options: { data: { nume } },
     });
     setLoading(false);
-    if (error) setEroare("A aparut o eroare. Incearca din nou.");
+    if (error) setEroare(error.message);
     else setSucces("Cont creat! Verifica emailul pentru confirmare.");
   };
 
