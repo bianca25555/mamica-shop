@@ -23,7 +23,7 @@ export default function AnunturileMele() {
   };
 
   const stergeAnunt = async (id: string) => {
-    if (!confirm("Esti sigura ca vrei sa stergi acest anunt?")) return;
+    if (!confirm("Ești sigură că vrei să ștergi acest anunț?")) return;
     await supabase.from("anunturi").delete().eq("id", id);
     setAnunturi((prev) => prev.filter((a) => a.id !== id));
   };
@@ -31,7 +31,7 @@ export default function AnunturileMele() {
   if (loading) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-400">Se incarca...</p>
+        <p className="text-gray-400">Se încarcă...</p>
       </main>
     );
   }
@@ -41,9 +41,9 @@ export default function AnunturileMele() {
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-4xl mb-4">🔒</p>
-          <p className="text-gray-500 mb-4">Trebuie sa fii logat pentru a vedea anunturile tale.</p>
+          <p className="text-gray-500 mb-4">Trebuie să fii logat pentru a vedea anunțurile tale.</p>
           <Link href="/login" className="bg-pink-500 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-pink-600">
-            Intra in cont
+            Intră în cont
           </Link>
         </div>
       </main>
@@ -61,7 +61,7 @@ export default function AnunturileMele() {
             <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
           </Link>
           <Link href="/posteaza" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm font-semibold hover:bg-pink-600">
-            + Anunt nou
+            + Anunț nou
           </Link>
         </div>
       </header>
@@ -69,18 +69,18 @@ export default function AnunturileMele() {
       <section className="max-w-4xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Anunturile mele</h1>
-            <p className="text-gray-400 text-sm mt-1">{anunturi.length} anunturi active</p>
+            <h1 className="text-2xl font-bold text-gray-800">Anunțurile mele</h1>
+            <p className="text-gray-400 text-sm mt-1">{anunturi.length} anunțuri active</p>
           </div>
         </div>
 
         {anunturi.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
             <p className="text-5xl mb-4">📭</p>
-            <p className="text-gray-500 mb-2 font-medium">Nu ai postat niciun anunt inca.</p>
-            <p className="text-gray-400 text-sm mb-6">Incepe sa vinzi produse pentru mame si copii!</p>
+            <p className="text-gray-500 mb-2 font-medium">Nu ai postat niciun anunț încă.</p>
+            <p className="text-gray-400 text-sm mb-6">Începe să vinzi produse pentru mame și copii!</p>
             <Link href="/posteaza" className="bg-pink-500 text-white px-8 py-3 rounded-xl text-sm font-semibold hover:bg-pink-600">
-              Posteaza primul anunt
+              Postează primul anunț
             </Link>
           </div>
         ) : (
@@ -102,17 +102,17 @@ export default function AnunturileMele() {
                 </div>
                 <div className="flex flex-col gap-2 flex-shrink-0">
                   <Link href={`/anunt/${anunt.id}`}
-  className="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-medium hover:bg-gray-50 text-center">
-  Vezi
-</Link>
-<Link href={`/editeaza/${anunt.id}`}
-  className="px-4 py-2 border border-pink-200 text-pink-500 rounded-xl text-xs font-medium hover:bg-pink-50 text-center">
-  Editeaza
-</Link>
-<button onClick={() => stergeAnunt(anunt.id)}
-  className="px-4 py-2 border border-red-100 text-red-400 rounded-xl text-xs font-medium hover:bg-red-50">
-  Sterge
-</button>
+                    className="px-4 py-2 border border-gray-200 text-gray-600 rounded-xl text-xs font-medium hover:bg-gray-50 text-center">
+                    Vezi
+                  </Link>
+                  <Link href={`/editeaza/${anunt.id}`}
+                    className="px-4 py-2 border border-pink-200 text-pink-500 rounded-xl text-xs font-medium hover:bg-pink-50 text-center">
+                    Editează
+                  </Link>
+                  <button onClick={() => stergeAnunt(anunt.id)}
+                    className="px-4 py-2 border border-red-100 text-red-400 rounded-xl text-xs font-medium hover:bg-red-50">
+                    Șterge
+                  </button>
                 </div>
               </div>
             ))}
