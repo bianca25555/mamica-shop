@@ -173,11 +173,17 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
             {esteAlMeu && (
               <>
                 <Link href={`/editeaza/${anunt.id}`}
-                  className="w-full border border-pink-200 text-pink-500 py-3 rounded-xl text-sm font-medium hover:bg-pink-50 text-center">
+                  className="w-full border-2 border-pink-300 text-pink-500 py-3 rounded-xl text-sm font-semibold hover:bg-pink-500 hover:text-white hover:border-pink-500 transition-all duration-200 active:scale-95 text-center">
                   ✏️ Editează anunțul
                 </Link>
-                <button onClick={marcheazaVandut} disabled={marcandVandut}
-                  className={`w-full py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 active:scale-95 ${anunt.vandut ? "border-green-300 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500" : "border-gray-300 text-gray-500 hover:bg-gray-700 hover:text-white hover:border-gray-700"}`}>-green-50" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}>
+                <button
+                  onClick={marcheazaVandut}
+                  disabled={marcandVandut}
+                  className={`w-full py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 active:scale-95 disabled:opacity-50 ${
+                    anunt.vandut
+                      ? "border-green-300 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500"
+                      : "border-gray-300 text-gray-500 hover:bg-gray-600 hover:text-white hover:border-gray-600"
+                  }`}>
                   {marcandVandut ? "Se actualizează..." : anunt.vandut ? "✅ Marchează ca disponibil" : "🏷️ Marchează ca vândut"}
                 </button>
               </>
