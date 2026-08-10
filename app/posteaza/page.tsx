@@ -3,15 +3,27 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
 
-const categorii = [
-  "Alăptat", "Burtiere și Maternitate", "Îngrijire postnatală", "Modă gravide",
-  "Hăinuțe", "Cărucioare", "Jucării", "Mobilier cameră",
-  "Hrănire", "Siguranță", "Cărți și Educație", "Accesorii",
-];
+const categoriiCuSubcategorii: Record<string, string[]> = {
+  "Alăptat": ["Pompe de sân", "Sutiene alăptat", "Perne alăptat", "Protectoare mameloane", "Altele"],
+  "Burtiere și Maternitate": ["Burtiere", "Haine gravide", "Ciorapi compresivi", "Altele"],
+  "Îngrijire postnatală": ["Îngrijire cicatrice", "Produse postnatale", "Altele"],
+  "Modă gravide": ["Bluze", "Pantaloni", "Rochii", "Seturi", "Altele"],
+  "Hăinuțe": ["Body-uri", "Pijamale", "Rochițe", "Pantaloni", "Bluze", "Seturi", "Geci și Paltoane", "Accesorii vestimentare"],
+  "Cărucioare": ["Cărucioare 3 în 1", "Cărucioare sport", "Landouri", "Accesorii cărucioare"],
+  "Jucării": ["Jucării 0-1 an", "Jucării 1-3 ani", "Jucării 3+ ani", "Jucării educative", "Jocuri de societate"],
+  "Mobilier cameră": ["Pătuțuri", "Saltele", "Leagăne", "Comodă", "Canapele alăptat"],
+  "Hrănire": ["Biberoane", "Scaune de masă", "Sterilizatoare", "Tacâmuri bebeluș", "Recipiente alimente"],
+  "Siguranță": ["Scaune auto", "Baby monitor", "Protecții colțuri", "Porți de siguranță"],
+  "Cărți și Educație": ["Cărți bebeluși", "Cărți copii", "Jocuri educative", "Altele"],
+  "Accesorii": ["Genți mamă", "Suzete", "Monitoare", "Altele"],
+};
+
+const categorii = Object.keys(categoriiCuSubcategorii);
 
 export default function Posteaza() {
   const [titlu, setTitlu] = useState("");
   const [categorie, setCategorie] = useState("");
+  const [subcategorie, setSubcategorie] = useState("");
   const [pret, setPret] = useState("");
   const [descriere, setDescriere] = useState("");
   const [locatie, setLocatie] = useState("");
@@ -58,7 +70,8 @@ export default function Posteaza() {
       pozeUrls.push(urlData.publicUrl);
     }
     const { error } = await supabase.from("anunturi").insert({
-      titlu, categorie, pret: parseFloat(pret), descriere, locatie, telefon,
+      titlu, categorie, subcategorie: subcategorie || null,
+      pret: parseFloat(pret), descriere, locatie, telefon,
       imagine: pozeUrls[0] || null, poze: pozeUrls, user_id: user.id,
     });
     setLoading(false);
@@ -118,14 +131,27 @@ export default function Posteaza() {
               placeholder="ex: Cărucior Quinny Buzz, stare foarte bună"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
+
           <div>
             <label className="text-sm font-medium text-gray-700 mb-1 block">Categorie *</label>
-            <select value={categorie} onChange={(e) => setCategorie(e.target.value)}
+            <select value={categorie} onChange={(e) => { setCategorie(e.target.value); setSubcategorie(""); }}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
               <option value="">Selectează o categorie</option>
               {categorii.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
             </select>
           </div>
+
+          {categorie && categoriiCuSubcategorii[categorie] && (
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">Subcategorie</label>
+              <select value={subcategorie} onChange={(e) => setSubcategorie(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
+                <option value="">Selectează o subcategorie</option>
+                {categoriiCuSubcategorii[categorie].map((sub) => <option key={sub} value={sub}>{sub}</option>)}
+              </select>
+            </div>
+          )}
+
           <div>
             <label className="text-sm font-medium text-gray-700 mb-1 block">Preț (RON) *</label>
             <input type="number" value={pret} onChange={(e) => setPret(e.target.value)}
@@ -167,9 +193,7 @@ export default function Posteaza() {
                   <div key={index} className="relative">
                     <img src={preview} alt={`poză ${index + 1}`} className="w-full h-24 object-cover rounded-xl" />
                     <button onClick={() => stergePoza(index)}
-                      className="absolute top-1 right-1 bg-white rounded-full w-6 h-6 flex items-center justify-center text-red-400 shadow text-xs font-bold">
-                      ✕
-                    </button>
+                      className="absolute top-1 right-1 bg-white rounded-full w-6 h-6 flex items-center justify-center text-red-400 shadow text-xs font-bold">✕</button>
                   </div>
                 ))}
               </div>
