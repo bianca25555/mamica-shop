@@ -24,27 +24,19 @@ const subcategoriiMap: Record<string, string[]> = {
 
 function MesajeLink({ userId }: { userId: string }) {
   const [necitite, setNecitite] = useState(0);
-
   useEffect(() => {
     if (!userId) return;
     const fetch = async () => {
-      const { count } = await supabase
-        .from("mesaje")
-        .select("*", { count: "exact", head: true })
-        .eq("to_user_id", userId)
-        .eq("citit", false);
+      const { count } = await supabase.from("mesaje").select("*", { count: "exact", head: true }).eq("to_user_id", userId).eq("citit", false);
       setNecitite(count || 0);
     };
     fetch();
   }, [userId]);
-
   return (
     <Link href="/mesaje" className="relative text-sm text-gray-600 hover:text-pink-500 font-medium hidden sm:block px-3 py-2">
       Mesaje
       {necitite > 0 && (
-        <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-          {necitite}
-        </span>
+        <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{necitite}</span>
       )}
     </Link>
   );
@@ -75,10 +67,8 @@ export default function Home() {
     if (cautare.trim()) {
       const t = cautare.toLowerCase();
       rezultate = rezultate.filter(a =>
-        a.titlu?.toLowerCase().includes(t) ||
-        a.categorie?.toLowerCase().includes(t) ||
-        a.subcategorie?.toLowerCase().includes(t) ||
-        a.descriere?.toLowerCase().includes(t) ||
+        a.titlu?.toLowerCase().includes(t) || a.categorie?.toLowerCase().includes(t) ||
+        a.subcategorie?.toLowerCase().includes(t) || a.descriere?.toLowerCase().includes(t) ||
         a.locatie?.toLowerCase().includes(t)
       );
     }
@@ -100,24 +90,15 @@ export default function Home() {
     setLoading(false);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-  };
+  const handleLogout = async () => { await supabase.auth.signOut(); setUser(null); };
 
-  const resetFiltre = () => {
-    setCautare("");
-    setCategorieFiltru("");
-    setSubcategorieFiltru("");
-    setPretMin("");
-    setPretMax("");
-    setLocatie("");
-  };
+  const resetFiltre = () => { setCautare(""); setCategorieFiltru(""); setSubcategorieFiltru(""); setPretMin(""); setPretMax(""); setLocatie(""); };
 
   const areFiltreActive = cautare || categorieFiltru || subcategorieFiltru || pretMin || pretMax || locatie;
 
   return (
     <main className="min-h-screen bg-gray-50">
+      {/* Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -127,28 +108,21 @@ export default function Home() {
             <span className="text-lg font-bold text-gray-800 hidden sm:block">Mom<span className="text-pink-500">&</span>Baby</span>
             <span className="text-lg font-bold text-gray-800 sm:hidden">M<span className="text-pink-500">&</span>B</span>
           </Link>
-
           <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
             <div className="flex items-center w-full bg-gray-100 rounded-xl px-3 py-2">
               <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input type="text" value={cautare} onChange={(e) => setCautare(e.target.value)}
-                placeholder="Caută produse..." className="flex-1 bg-transparent outline-none text-gray-600 text-sm" />
+              <input type="text" value={cautare} onChange={(e) => setCautare(e.target.value)} placeholder="Caută produse..." className="flex-1 bg-transparent outline-none text-gray-600 text-sm" />
               {cautare && <button onClick={() => setCautare("")} className="text-gray-400 hover:text-gray-600 text-sm">✕</button>}
             </div>
           </div>
-
           <div className="flex gap-2 items-center">
             {user ? (
               <>
-                <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium hidden sm:block px-3 py-2">
-                  Anunțurile mele
-                </Link>
+                <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium hidden sm:block px-3 py-2">Anunțurile mele</Link>
                 <MesajeLink userId={user?.id} />
-                <Link href="/posteaza" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
-                  + Adaugă anunț
-                </Link>
+                <Link href="/posteaza" className="px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">+ Adaugă anunț</Link>
                 <button onClick={handleLogout} className="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm font-medium border border-gray-200 rounded-xl hover:bg-gray-50">Ieșire</button>
               </>
             ) : (
@@ -161,35 +135,67 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-12 text-center">
-          <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4">
-            🌸 Platforma #1 pentru mame din România
-          </span>
-          <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
-            Cumpără și vinde<br />
-            <span className="text-pink-500">pentru mămică și bebeluș</span>
-          </h1>
-          <p className="text-gray-500 mb-8 text-lg max-w-xl mx-auto">
-            Un loc unde găsești tot ce ai nevoie ca mămică — de la produse noi și second-hand, până la sfaturi și o comunitate de mame ca tine.
-          </p>
-          <Link href="/posteaza" className="px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 shadow-sm">
-            Postează un anunț
-          </Link>
+      {/* Hero cu poza */}
+      <section className="relative bg-white overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 py-12 md:py-16 flex flex-col md:flex-row items-center gap-8">
+          <div className="flex-1 text-center md:text-left">
+            <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+              🌸 Platforma #1 pentru mame din România
+            </span>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+              Cumpără și vinde<br />
+              <span className="text-pink-500">pentru mămică și bebeluș</span>
+            </h1>
+            <p className="text-gray-500 mb-8 text-lg max-w-xl">
+              Un loc unde găsești tot ce ai nevoie ca mămică — de la produse noi și second-hand, până la sfaturi și o comunitate de mame ca tine.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+              <Link href="/posteaza" className="px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 shadow-sm text-center">
+                Postează un anunț
+              </Link>
+              <button onClick={() => document.getElementById("anunturi")?.scrollIntoView({ behavior: "smooth" })}
+                className="px-8 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 text-center">
+                Vezi anunțurile
+              </button>
+            </div>
+            {/* Stats */}
+            <div className="flex gap-6 mt-8 justify-center md:justify-start">
+              <div>
+                <p className="text-2xl font-bold text-gray-800">{anunturi.length}+</p>
+                <p className="text-sm text-gray-400">Anunțuri active</p>
+              </div>
+              <div className="border-l border-gray-200 pl-6">
+                <p className="text-2xl font-bold text-gray-800">100%</p>
+                <p className="text-sm text-gray-400">Gratuit</p>
+              </div>
+              <div className="border-l border-gray-200 pl-6">
+                <p className="text-2xl font-bold text-gray-800">🇷🇴</p>
+                <p className="text-sm text-gray-400">România</p>
+              </div>
+            </div>
+          </div>
+          {/* Poze */}
+          <div className="hidden md:grid grid-cols-2 gap-3 flex-shrink-0 w-80">
+            <img src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=200&h=200&fit=crop" alt="mama si bebe" className="rounded-2xl w-full h-40 object-cover" />
+            <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?w=200&h=200&fit=crop" alt="bebe" className="rounded-2xl w-full h-40 object-cover mt-6" />
+            <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=200&h=200&fit=crop" alt="jucarii" className="rounded-2xl w-full h-40 object-cover" />
+            <img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=200&h=200&fit=crop" alt="carucior" className="rounded-2xl w-full h-40 object-cover mt-6" />
+          </div>
         </div>
       </section>
 
+      {/* Bara cautare mobil */}
       <div className="md:hidden bg-white border-b border-gray-100 px-4 py-3">
         <div className="flex items-center w-full bg-gray-100 rounded-xl px-3 py-2">
           <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <input type="text" value={cautare} onChange={(e) => setCautare(e.target.value)}
-            placeholder="Caută produse..." className="flex-1 bg-transparent outline-none text-gray-600 text-sm" />
+          <input type="text" value={cautare} onChange={(e) => setCautare(e.target.value)} placeholder="Caută produse..." className="flex-1 bg-transparent outline-none text-gray-600 text-sm" />
           {cautare && <button onClick={() => setCautare("")} className="text-gray-400">✕</button>}
         </div>
       </div>
 
+      {/* Categorii */}
       {!areFiltreActive && (
         <section className="max-w-6xl mx-auto px-4 py-8">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Categorii</h2>
@@ -218,7 +224,8 @@ export default function Home() {
         </section>
       )}
 
-      <section className="max-w-6xl mx-auto px-4 py-6">
+      {/* Anunturi */}
+      <section id="anunturi" className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h2 className="text-lg font-bold text-gray-800">
             {areFiltreActive ? `${anunturiAfisate.length} rezultate` : "Anunțuri recente"}
@@ -231,9 +238,7 @@ export default function Home() {
               <option value="pret_desc">Preț descrescător</option>
             </select>
             {areFiltreActive && (
-              <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">
-                Șterge filtrele
-              </button>
+              <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">Șterge filtrele</button>
             )}
             <button onClick={() => setFiltreVizibile(!filtreVizibile)}
               className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${filtreVizibile ? "bg-pink-500 text-white border-pink-500" : "bg-white text-gray-600 border-gray-200 hover:border-pink-300"}`}>
@@ -264,20 +269,17 @@ export default function Home() {
             )}
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Preț minim (RON)</label>
-              <input type="number" value={pretMin} onChange={(e) => setPretMin(e.target.value)}
-                placeholder="ex: 50"
+              <input type="number" value={pretMin} onChange={(e) => setPretMin(e.target.value)} placeholder="ex: 50"
                 className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
             </div>
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Preț maxim (RON)</label>
-              <input type="number" value={pretMax} onChange={(e) => setPretMax(e.target.value)}
-                placeholder="ex: 500"
+              <input type="number" value={pretMax} onChange={(e) => setPretMax(e.target.value)} placeholder="ex: 500"
                 className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
             </div>
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Localitate</label>
-              <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)}
-                placeholder="ex: Cluj, București"
+              <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)} placeholder="ex: Cluj, București"
                 className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400" />
             </div>
           </div>
@@ -289,9 +291,7 @@ export default function Home() {
           <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
             <p className="text-4xl mb-3">🔍</p>
             <p className="text-gray-500 mb-4">Nu am găsit anunțuri.</p>
-            <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">
-              Resetează filtrele
-            </button>
+            <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">Resetează filtrele</button>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -300,9 +300,7 @@ export default function Home() {
                 className="bg-white rounded-2xl border border-gray-100 hover:border-pink-200 hover:shadow-md cursor-pointer overflow-hidden block transition-all">
                 <div className="h-40 bg-gray-50 overflow-hidden relative">
                   {anunt.vandut && (
-                    <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
-                      VÂNDUT
-                    </div>
+                    <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs font-bold px-2 py-1 rounded-full z-10">VÂNDUT</div>
                   )}
                   {anunt.imagine ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -327,6 +325,7 @@ export default function Home() {
         )}
       </section>
 
+      {/* Footer */}
       <footer className="bg-white border-t border-gray-100 mt-16 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
