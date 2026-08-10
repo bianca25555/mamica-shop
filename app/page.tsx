@@ -95,6 +95,9 @@ export default function Home() {
                 <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium block px-3 py-2 transition-colors">
                   Anunturile mele
                 </Link>
+                <Link href="/mesaje" className="text-sm text-gray-600 hover:text-pink-500 font-medium hidden sm:block px-3 py-2">
+  Mesaje
+</Link>
                 <Link href="/posteaza" className="btn-animate px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
                   + Adauga anunt
                 </Link>
