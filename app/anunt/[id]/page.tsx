@@ -9,9 +9,12 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
   const [loading, setLoading] = useState(true);
   const [pozaActiva, setPozaActiva] = useState(0);
   const [pozaMarita, setPozaMarita] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [mesajTrimis, setMesajTrimis] = useState(false);
 
   useEffect(() => {
     if (!id) return;
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
     const fetchAnunt = async () => {
       const { data } = await supabase.from("anunturi").select("*").eq("id", id).single();
       setAnunt(data);
@@ -19,6 +22,23 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
     };
     fetchAnunt();
   }, [id]);
+
+  const trimiteMesajInitial = async () => {
+    if (!user) { window.location.href = "/login"; return; }
+    if (!anunt) return;
+    if (user.id === anunt.user_id) { alert("Nu poti trimite mesaj la propriul anunt."); return; }
+
+    const { error } = await supabase.from("mesaje").insert({
+      from_user_id: user.id,
+      to_user_id: anunt.user_id,
+      anunt_id: id,
+      continut: "Buna! Sunt interesat/a de anuntul tau.",
+    });
+
+    if (!error) {
+      window.location.href = `/mesaje/${id}/${anunt.user_id}`;
+    }
+  };
 
   if (loading) {
     return (
@@ -41,6 +61,7 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
   }
 
   const toatePoze = anunt.poze?.length > 0 ? anunt.poze : (anunt.imagine ? [anunt.imagine] : []);
+  const esteAlMeu = user?.id === anunt.user_id;
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -58,14 +79,14 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
             <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
               <span className="text-white text-xs font-bold">M&B</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
+            <span className="text-lg font-bold text-gray-800 hidden sm:block">Mom<span className="text-pink-500">&</span>Baby</span>
+            <span className="text-lg font-bold text-gray-800 sm:hidden">M<span className="text-pink-500">&</span>B</span>
           </Link>
           <Link href="/" className="text-sm text-gray-500 hover:text-pink-500">← Inapoi</Link>
         </div>
       </header>
 
       <section className="max-w-4xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
         <div className="text-sm text-gray-400 mb-6 flex items-center gap-2">
           <Link href="/" className="hover:text-pink-500">Acasa</Link>
           <span>›</span>
@@ -75,7 +96,6 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Galerie */}
           <div>
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden h-80 cursor-zoom-in"
               onClick={() => toatePoze[pozaActiva] && setPozaMarita(toatePoze[pozaActiva])}>
@@ -96,7 +116,6 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
             )}
           </div>
 
-          {/* Detalii */}
           <div className="flex flex-col gap-4">
             <span className="text-xs text-pink-500 font-semibold bg-pink-50 px-3 py-1 rounded-full w-fit">
               {anunt.categorie}
@@ -119,13 +138,23 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
               className="w-full bg-pink-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-pink-600 text-center">
               📞 {anunt.telefon}
             </a>
-            <button className="w-full border border-gray-200 text-gray-700 py-3 rounded-xl text-sm font-medium hover:bg-gray-50">
-              💬 Trimite mesaj
-            </button>
+
+            {!esteAlMeu && (
+              <button onClick={trimiteMesajInitial}
+                className="w-full border border-gray-200 text-gray-700 py-3 rounded-xl text-sm font-medium hover:bg-gray-50">
+                💬 Trimite mesaj
+              </button>
+            )}
+
+            {esteAlMeu && (
+              <Link href={`/editeaza/${anunt.id}`}
+                className="w-full border border-pink-200 text-pink-500 py-3 rounded-xl text-sm font-medium hover:bg-pink-50 text-center">
+                ✏️ Editeaza anuntul
+              </Link>
+            )}
           </div>
         </div>
 
-        {/* Descriere */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 mt-8">
           <h2 className="text-lg font-bold text-gray-800 mb-3">Descriere</h2>
           <p className="text-gray-600 text-sm leading-relaxed">{anunt.descriere}</p>
