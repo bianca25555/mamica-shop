@@ -2,6 +2,33 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
+function MesajeLink({ userId }: { userId: string }) {
+  const [necitite, setNecitite] = useState(0);
+
+  useEffect(() => {
+    if (!userId) return;
+    const fetch = async () => {
+      const { count } = await supabase
+        .from("mesaje")
+        .select("*", { count: "exact", head: true })
+        .eq("to_user_id", userId)
+        .eq("citit", false);
+      setNecitite(count || 0);
+    };
+    fetch();
+  }, [userId]);
+
+  return (
+    <Link href="/mesaje" className="relative text-sm text-gray-600 hover:text-pink-500 font-medium hidden sm:block px-3 py-2">
+      Mesaje
+      {necitite > 0 && (
+        <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+          {necitite}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 const categoriiMama = ["Alaptat", "Burtiere si Maternitate", "Ingrijire postnatala", "Moda gravide"];
 const categoriiCopil = ["Hainute", "Carucioare", "Jucarii", "Mobilier camera", "Hranire", "Siguranta", "Carti si Educatie", "Accesorii"];
@@ -95,9 +122,7 @@ export default function Home() {
                 <Link href="/anunturile-mele" className="text-sm text-gray-600 hover:text-pink-500 font-medium block px-3 py-2 transition-colors">
                   Anunturile mele
                 </Link>
-                <Link href="/mesaje" className="text-sm text-gray-600 hover:text-pink-500 font-medium hidden sm:block px-3 py-2">
-  Mesaje
-</Link>
+                <MesajeLink userId={user?.id} />
                 <Link href="/posteaza" className="btn-animate px-4 py-2 bg-pink-500 text-white rounded-xl text-sm hover:bg-pink-600 font-semibold">
                   + Adauga anunt
                 </Link>

@@ -141,7 +141,7 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
 
             {!esteAlMeu && (
               <button onClick={trimiteMesajInitial}
-                className="w-full border border-gray-200 text-gray-700 py-3 rounded-xl text-sm font-medium hover:bg-gray-50">
+                className="w-full border-2 border-pink-300 text-pink-500 py-3 rounded-xl text-sm font-semibold hover:bg-pink-500 hover:text-white hover:border-pink-500 transition-all duration-200 active:scale-95">
                 💬 Trimite mesaj
               </button>
             )}
