@@ -7,6 +7,21 @@ const categoriiMama = ["Alăptat", "Burtiere și Maternitate", "Îngrijire postn
 const categoriiCopil = ["Hăinuțe", "Cărucioare", "Jucării", "Mobilier cameră", "Hrănire", "Siguranță", "Cărți și Educație", "Accesorii"];
 const toateCategoriile = [...categoriiMama, ...categoriiCopil];
 
+const subcategoriiMap: Record<string, string[]> = {
+  "Alăptat": ["Pompe de sân", "Sutiene alăptat", "Perne alăptat", "Protectoare mameloane", "Altele"],
+  "Burtiere și Maternitate": ["Burtiere", "Haine gravide", "Ciorapi compresivi", "Altele"],
+  "Îngrijire postnatală": ["Îngrijire cicatrice", "Produse postnatale", "Altele"],
+  "Modă gravide": ["Bluze", "Pantaloni", "Rochii", "Seturi", "Altele"],
+  "Hăinuțe": ["Body-uri", "Pijamale", "Rochițe", "Pantaloni", "Bluze", "Seturi", "Geci și Paltoane", "Accesorii vestimentare"],
+  "Cărucioare": ["Cărucioare 3 în 1", "Cărucioare sport", "Landouri", "Accesorii cărucioare"],
+  "Jucării": ["Jucării 0-1 an", "Jucării 1-3 ani", "Jucării 3+ ani", "Jucării educative", "Jocuri de societate"],
+  "Mobilier cameră": ["Pătuțuri", "Saltele", "Leagăne", "Comodă", "Canapele alăptat"],
+  "Hrănire": ["Biberoane", "Scaune de masă", "Sterilizatoare", "Tacâmuri bebeluș", "Recipiente alimente"],
+  "Siguranță": ["Scaune auto", "Baby monitor", "Protecții colțuri", "Porți de siguranță"],
+  "Cărți și Educație": ["Cărți bebeluși", "Cărți copii", "Jocuri educative", "Altele"],
+  "Accesorii": ["Genți mamă", "Suzete", "Monitoare", "Altele"],
+};
+
 function MesajeLink({ userId }: { userId: string }) {
   const [necitite, setNecitite] = useState(0);
 
@@ -46,6 +61,7 @@ export default function Home() {
   const [pretMax, setPretMax] = useState("");
   const [locatie, setLocatie] = useState("");
   const [categorieFiltru, setCategorieFiltru] = useState("");
+  const [subcategorieFiltru, setSubcategorieFiltru] = useState("");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -60,16 +76,18 @@ export default function Home() {
       rezultate = rezultate.filter(a =>
         a.titlu?.toLowerCase().includes(t) ||
         a.categorie?.toLowerCase().includes(t) ||
+        a.subcategorie?.toLowerCase().includes(t) ||
         a.descriere?.toLowerCase().includes(t) ||
         a.locatie?.toLowerCase().includes(t)
       );
     }
     if (categorieFiltru) rezultate = rezultate.filter(a => a.categorie === categorieFiltru);
+    if (subcategorieFiltru) rezultate = rezultate.filter(a => a.subcategorie === subcategorieFiltru);
     if (pretMin) rezultate = rezultate.filter(a => a.pret >= parseFloat(pretMin));
     if (pretMax) rezultate = rezultate.filter(a => a.pret <= parseFloat(pretMax));
     if (locatie.trim()) rezultate = rezultate.filter(a => a.locatie?.toLowerCase().includes(locatie.toLowerCase()));
     setAnunturiAfisate(rezultate);
-  }, [cautare, anunturi, categorieFiltru, pretMin, pretMax, locatie]);
+  }, [cautare, anunturi, categorieFiltru, subcategorieFiltru, pretMin, pretMax, locatie]);
 
   const fetchAnunturi = async () => {
     const { data } = await supabase.from("anunturi").select("*").order("created_at", { ascending: false }).limit(50);
@@ -86,16 +104,16 @@ export default function Home() {
   const resetFiltre = () => {
     setCautare("");
     setCategorieFiltru("");
+    setSubcategorieFiltru("");
     setPretMin("");
     setPretMax("");
     setLocatie("");
   };
 
-  const areFiltreActive = cautare || categorieFiltru || pretMin || pretMax || locatie;
+  const areFiltreActive = cautare || categorieFiltru || subcategorieFiltru || pretMin || pretMax || locatie;
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -139,7 +157,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero */}
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-12 text-center">
           <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4">
@@ -158,7 +175,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Bara cautare mobil */}
       <div className="md:hidden bg-white border-b border-gray-100 px-4 py-3">
         <div className="flex items-center w-full bg-gray-100 rounded-xl px-3 py-2">
           <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,7 +186,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Categorii */}
       {!areFiltreActive && (
         <section className="max-w-6xl mx-auto px-4 py-8">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Categorii</h2>
@@ -199,7 +214,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* Filtre & Anunturi */}
       <section className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-800">
@@ -219,15 +233,25 @@ export default function Home() {
         </div>
 
         {filtreVizibile && (
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Categorie</label>
-              <select value={categorieFiltru} onChange={(e) => setCategorieFiltru(e.target.value)}
+              <select value={categorieFiltru} onChange={(e) => { setCategorieFiltru(e.target.value); setSubcategorieFiltru(""); }}
                 className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
                 <option value="">Toate categoriile</option>
                 {toateCategoriile.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
               </select>
             </div>
+            {categorieFiltru && subcategoriiMap[categorieFiltru] && (
+              <div>
+                <label className="text-xs font-medium text-gray-500 mb-1 block">Subcategorie</label>
+                <select value={subcategorieFiltru} onChange={(e) => setSubcategorieFiltru(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
+                  <option value="">Toate</option>
+                  {subcategoriiMap[categorieFiltru].map((sub) => <option key={sub} value={sub}>{sub}</option>)}
+                </select>
+              </div>
+            )}
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Preț minim (RON)</label>
               <input type="number" value={pretMin} onChange={(e) => setPretMin(e.target.value)}
@@ -274,7 +298,10 @@ export default function Home() {
                   )}
                 </div>
                 <div className="p-3">
-                  <p className="text-xs text-pink-500 font-medium mb-1">{anunt.categorie}</p>
+                  <div className="flex gap-1 flex-wrap mb-1">
+                    <p className="text-xs text-pink-500 font-medium">{anunt.categorie}</p>
+                    {anunt.subcategorie && <p className="text-xs text-gray-400">· {anunt.subcategorie}</p>}
+                  </div>
                   <p className="text-gray-800 font-semibold text-sm mb-2 line-clamp-2 leading-snug">{anunt.titlu}</p>
                   <p className="text-gray-900 font-bold text-base">{anunt.pret} RON</p>
                   <p className="text-gray-400 text-xs mt-1">📍 {anunt.locatie}</p>
@@ -285,7 +312,6 @@ export default function Home() {
         )}
       </section>
 
-      {/* Footer */}
       <footer className="bg-white border-t border-gray-100 mt-16 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
