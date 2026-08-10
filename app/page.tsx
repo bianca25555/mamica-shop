@@ -62,6 +62,7 @@ export default function Home() {
   const [locatie, setLocatie] = useState("");
   const [categorieFiltru, setCategorieFiltru] = useState("");
   const [subcategorieFiltru, setSubcategorieFiltru] = useState("");
+  const [sortare, setSortare] = useState("recent");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -86,8 +87,11 @@ export default function Home() {
     if (pretMin) rezultate = rezultate.filter(a => a.pret >= parseFloat(pretMin));
     if (pretMax) rezultate = rezultate.filter(a => a.pret <= parseFloat(pretMax));
     if (locatie.trim()) rezultate = rezultate.filter(a => a.locatie?.toLowerCase().includes(locatie.toLowerCase()));
+    if (sortare === "pret_asc") rezultate.sort((a, b) => a.pret - b.pret);
+else if (sortare === "pret_desc") rezultate.sort((a, b) => b.pret - a.pret);
+else rezultate.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     setAnunturiAfisate(rezultate);
-  }, [cautare, anunturi, categorieFiltru, subcategorieFiltru, pretMin, pretMax, locatie]);
+  }, [cautare, anunturi, categorieFiltru, subcategorieFiltru, pretMin, pretMax, locatie, sortare]);
 
   const fetchAnunturi = async () => {
     const { data } = await supabase.from("anunturi").select("*").order("created_at", { ascending: false }).limit(50);
@@ -215,36 +219,7 @@ export default function Home() {
       )}
 
       <section className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-  <h2 className="text-lg font-bold text-gray-800">
-    {areFiltreActive ? `${anunturiAfisate.length} rezultate` : "Anunțuri recente"}
-  </h2>
-  <div className="flex gap-2 items-center">
-    <select
-      onChange={(e) => {
-        const val = e.target.value;
-        const sorted = [...anunturiAfisate];
-        if (val === "pret_asc") sorted.sort((a, b) => a.pret - b.pret);
-        else if (val === "pret_desc") sorted.sort((a, b) => b.pret - a.pret);
-        else sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        setAnunturiAfisate(sorted);
-      }}
-      className="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-600 outline-none focus:border-pink-400">
-      <option value="recent">Cele mai recente</option>
-      <option value="pret_asc">Preț crescător</option>
-      <option value="pret_desc">Preț descrescător</option>
-    </select>
-    {areFiltreActive && (
-      <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">
-        Șterge filtrele
-      </button>
-    )}
-    <button onClick={() => setFiltreVizibile(!filtreVizibile)}
-      className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${filtreVizibile ? "bg-pink-500 text-white border-pink-500" : "bg-white text-gray-600 border-gray-200 hover:border-pink-300"}`}>
-      🔧 Filtre
-    </button>
-  </div>
-</div>
+        <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-800">
             {areFiltreActive ? `${anunturiAfisate.length} rezultate` : "Anunțuri recente"}
           </h2>
@@ -254,7 +229,13 @@ export default function Home() {
                 Șterge filtrele
               </button>
             )}
-            <button onClick={() => setFiltreVizibile(!filtreVizibile)}
+            <select value={sortare} onChange={(e) => setSortare(e.target.value)}
+  className="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-600 outline-none focus:border-pink-400">
+  <option value="recent">Cele mai recente</option>
+  <option value="pret_asc">Preț crescător</option>
+  <option value="pret_desc">Preț descrescător</option>
+</select>
+<button onClick={() => setFiltreVizibile(!filtreVizibile)}
               className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${filtreVizibile ? "bg-pink-500 text-white border-pink-500" : "bg-white text-gray-600 border-gray-200 hover:border-pink-300"}`}>
               🔧 Filtre
             </button>
