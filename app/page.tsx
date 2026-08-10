@@ -71,7 +71,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    let rezultate = anunturi;
+    let rezultate = [...anunturi];
     if (cautare.trim()) {
       const t = cautare.toLowerCase();
       rezultate = rezultate.filter(a =>
@@ -88,8 +88,8 @@ export default function Home() {
     if (pretMax) rezultate = rezultate.filter(a => a.pret <= parseFloat(pretMax));
     if (locatie.trim()) rezultate = rezultate.filter(a => a.locatie?.toLowerCase().includes(locatie.toLowerCase()));
     if (sortare === "pret_asc") rezultate.sort((a, b) => a.pret - b.pret);
-else if (sortare === "pret_desc") rezultate.sort((a, b) => b.pret - a.pret);
-else rezultate.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    else if (sortare === "pret_desc") rezultate.sort((a, b) => b.pret - a.pret);
+    else rezultate.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     setAnunturiAfisate(rezultate);
   }, [cautare, anunturi, categorieFiltru, subcategorieFiltru, pretMin, pretMax, locatie, sortare]);
 
@@ -219,23 +219,23 @@ else rezultate.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.crea
       )}
 
       <section className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h2 className="text-lg font-bold text-gray-800">
             {areFiltreActive ? `${anunturiAfisate.length} rezultate` : "Anunțuri recente"}
           </h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center flex-wrap">
+            <select value={sortare} onChange={(e) => setSortare(e.target.value)}
+              className="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-600 outline-none focus:border-pink-400">
+              <option value="recent">Cele mai recente</option>
+              <option value="pret_asc">Preț crescător</option>
+              <option value="pret_desc">Preț descrescător</option>
+            </select>
             {areFiltreActive && (
               <button onClick={resetFiltre} className="text-pink-500 text-sm hover:underline font-medium">
                 Șterge filtrele
               </button>
             )}
-            <select value={sortare} onChange={(e) => setSortare(e.target.value)}
-  className="border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-600 outline-none focus:border-pink-400">
-  <option value="recent">Cele mai recente</option>
-  <option value="pret_asc">Preț crescător</option>
-  <option value="pret_desc">Preț descrescător</option>
-</select>
-<button onClick={() => setFiltreVizibile(!filtreVizibile)}
+            <button onClick={() => setFiltreVizibile(!filtreVizibile)}
               className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${filtreVizibile ? "bg-pink-500 text-white border-pink-500" : "bg-white text-gray-600 border-gray-200 hover:border-pink-300"}`}>
               🔧 Filtre
             </button>
@@ -298,10 +298,15 @@ else rezultate.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.crea
             {anunturiAfisate.map((anunt) => (
               <Link key={anunt.id} href={`/anunt/${anunt.id}`}
                 className="bg-white rounded-2xl border border-gray-100 hover:border-pink-200 hover:shadow-md cursor-pointer overflow-hidden block transition-all">
-                <div className="h-40 bg-gray-50 overflow-hidden">
+                <div className="h-40 bg-gray-50 overflow-hidden relative">
+                  {anunt.vandut && (
+                    <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+                      VÂNDUT
+                    </div>
+                  )}
                   {anunt.imagine ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={anunt.imagine} alt={anunt.titlu} className="w-full h-full object-cover"
+                    <img src={anunt.imagine} alt={anunt.titlu} className={`w-full h-full object-cover ${anunt.vandut ? "opacity-50" : ""}`}
                       onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-200 text-4xl">📷</div>
