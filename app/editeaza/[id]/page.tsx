@@ -4,9 +4,9 @@ import Link from "next/link";
 import { supabase } from "../../lib/supabase";
 
 const categorii = [
-  "Alaptat", "Burtiere si Maternitate", "Ingrijire postnatala", "Moda gravide",
-  "Hainute", "Carucioare", "Jucarii", "Mobilier camera",
-  "Hranire", "Siguranta", "Carti si Educatie", "Accesorii",
+  "Alăptat", "Burtiere și Maternitate", "Îngrijire postnatală", "Modă gravide",
+  "Hăinuțe", "Cărucioare", "Jucării", "Mobilier cameră",
+  "Hrănire", "Siguranță", "Cărți și Educație", "Accesorii",
 ];
 
 export default function Editeaza({ params }: { params: Promise<{ id: string }> }) {
@@ -49,7 +49,7 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
   const handlePozeNoi = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const total = pozeExistente.length + pozeNoi.length + files.length;
-    if (total > 5) { setEroare("Poti avea maximum 5 poze."); return; }
+    if (total > 5) { setEroare("Poți avea maximum 5 poze."); return; }
     setEroare("");
     setPozeNoi((prev) => [...prev, ...files]);
     setPozePreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
@@ -68,7 +68,7 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
   const handleSubmit = async () => {
     setEroare("");
     if (!titlu || !categorie || !pret || !descriere || !locatie || !telefon) {
-      setEroare("Te rugam sa completezi toate campurile."); return;
+      setEroare("Te rugăm să completezi toate câmpurile."); return;
     }
     setLoading(true);
 
@@ -76,7 +76,7 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
     for (const poza of pozeNoi) {
       const fileName = `${Date.now()}-${Math.random()}-${poza.name}`;
       const { error: uploadError } = await supabase.storage.from("poze-anunturi").upload(fileName, poza);
-      if (uploadError) { setEroare("Eroare la upload poza."); setLoading(false); return; }
+      if (uploadError) { setEroare("Eroare la upload poză."); setLoading(false); return; }
       const { data: urlData } = supabase.storage.from("poze-anunturi").getPublicUrl(fileName);
       pozeUrls.push(urlData.publicUrl);
     }
@@ -87,14 +87,14 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
     }).eq("id", id);
 
     setLoading(false);
-    if (error) setEroare("A aparut o eroare. Incearca din nou.");
+    if (error) setEroare("A apărut o eroare. Încearcă din nou.");
     else setSalvat(true);
   };
 
   if (loadingDate) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-400">Se incarca...</p>
+        <p className="text-gray-400">Se încarcă...</p>
       </main>
     );
   }
@@ -106,14 +106,14 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
           <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">✅</span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Anunt actualizat!</h2>
-          <p className="text-gray-400 text-sm mb-6">Modificarile au fost salvate cu succes.</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Anunț actualizat!</h2>
+          <p className="text-gray-400 text-sm mb-6">Modificările au fost salvate cu succes.</p>
           <div className="flex gap-3 justify-center">
             <Link href={`/anunt/${id}`} className="px-6 py-3 bg-pink-500 text-white rounded-xl text-sm font-semibold hover:bg-pink-600">
-              Vezi anuntul
+              Vezi anunțul
             </Link>
             <Link href="/anunturile-mele" className="px-6 py-3 border border-gray-200 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50">
-              Anunturile mele
+              Anunțurile mele
             </Link>
           </div>
         </div>
@@ -133,21 +133,21 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
             </div>
             <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
           </Link>
-          <Link href="/anunturile-mele" className="text-sm text-gray-500 hover:text-pink-500">← Anunturile mele</Link>
+          <Link href="/anunturile-mele" className="text-sm text-gray-500 hover:text-pink-500">← Anunțurile mele</Link>
         </div>
       </header>
 
       <section className="max-w-2xl mx-auto px-4 py-10">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Editeaza anuntul</h1>
-          <p className="text-gray-400 text-sm mt-1">Modifica detaliile anuntului tau</p>
+          <h1 className="text-2xl font-bold text-gray-800">Editează anunțul</h1>
+          <p className="text-gray-400 text-sm mt-1">Modifică detaliile anunțului tău</p>
         </div>
 
         {eroare && <div className="bg-red-50 text-red-500 text-sm px-4 py-3 rounded-xl mb-4">{eroare}</div>}
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col gap-5">
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Titlu anunt *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Titlu anunț *</label>
             <input type="text" value={titlu} onChange={(e) => setTitlu(e.target.value)}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
           </div>
@@ -155,12 +155,12 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
             <label className="text-sm font-medium text-gray-700 mb-1 block">Categorie *</label>
             <select value={categorie} onChange={(e) => setCategorie(e.target.value)}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
-              <option value="">Selecteaza o categorie</option>
+              <option value="">Selectează o categorie</option>
               {categorii.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Pret (RON) *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Preț (RON) *</label>
             <input type="number" value={pret} onChange={(e) => setPret(e.target.value)}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
           </div>
@@ -175,7 +175,7 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Numar de telefon *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Număr de telefon *</label>
             <input type="tel" value={telefon} onChange={(e) => setTelefon(e.target.value)}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400" />
           </div>
@@ -188,8 +188,8 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
               <div onClick={() => fileInputRef.current?.click()}
                 className="border-2 border-dashed border-gray-200 rounded-xl p-5 text-center cursor-pointer hover:border-pink-300 hover:bg-pink-50 transition-all mb-3">
                 <p className="text-2xl mb-1">📷</p>
-                <p className="text-gray-500 text-sm font-medium">Adauga fotografii noi</p>
-                <p className="text-gray-300 text-xs mt-1">Poti adauga inca {5 - totalPoze} poze</p>
+                <p className="text-gray-500 text-sm font-medium">Adaugă fotografii noi</p>
+                <p className="text-gray-300 text-xs mt-1">Poți adăuga încă {5 - totalPoze} poze</p>
               </div>
             )}
 
@@ -199,7 +199,7 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
                 <div className="grid grid-cols-3 gap-2">
                   {pozeExistente.map((poza, index) => (
                     <div key={index} className="relative">
-                      <img src={poza} alt={`poza ${index + 1}`} className="w-full h-24 object-cover rounded-xl" />
+                      <img src={poza} alt={`poză ${index + 1}`} className="w-full h-24 object-cover rounded-xl" />
                       <button onClick={() => stergeExistenta(index)}
                         className="absolute top-1 right-1 bg-white rounded-full w-6 h-6 flex items-center justify-center text-red-400 shadow text-xs font-bold">✕</button>
                     </div>
@@ -214,7 +214,7 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
                 <div className="grid grid-cols-3 gap-2">
                   {pozePreviews.map((preview, index) => (
                     <div key={index} className="relative">
-                      <img src={preview} alt={`poza noua ${index + 1}`} className="w-full h-24 object-cover rounded-xl" />
+                      <img src={preview} alt={`poză nouă ${index + 1}`} className="w-full h-24 object-cover rounded-xl" />
                       <button onClick={() => stergeNoua(index)}
                         className="absolute top-1 right-1 bg-white rounded-full w-6 h-6 flex items-center justify-center text-red-400 shadow text-xs font-bold">✕</button>
                     </div>
@@ -226,7 +226,7 @@ export default function Editeaza({ params }: { params: Promise<{ id: string }> }
 
           <button onClick={handleSubmit} disabled={loading}
             className="w-full bg-pink-500 text-white py-3 rounded-xl font-semibold hover:bg-pink-600 text-sm disabled:opacity-50 mt-2">
-            {loading ? "Se salveaza..." : "Salveaza modificarile"}
+            {loading ? "Se salvează..." : "Salvează modificările"}
           </button>
         </div>
       </section>
