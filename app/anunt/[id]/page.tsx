@@ -177,7 +177,7 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
                   ✏️ Editează anunțul
                 </Link>
                 <button onClick={marcheazaVandut} disabled={marcandVandut}
-                  className={`w-full py-3 rounded-xl text-sm font-medium border transition-all ${anunt.vandut ? "border-green-200 text-green-500 hover:bg-green-50" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}>
+                  className={`w-full py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 active:scale-95 ${anunt.vandut ? "border-green-300 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500" : "border-gray-300 text-gray-500 hover:bg-gray-700 hover:text-white hover:border-gray-700"}`}>-green-50" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}>
                   {marcandVandut ? "Se actualizează..." : anunt.vandut ? "✅ Marchează ca disponibil" : "🏷️ Marchează ca vândut"}
                 </button>
               </>
