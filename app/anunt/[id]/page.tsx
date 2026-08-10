@@ -129,7 +129,7 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
                 👤
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-700">Vanzator verificat</p>
+                <p className="text-sm font-semibold text-gray-700">Vânzător verificat</p>
                 <p className="text-xs text-gray-400">Membru Mom&Baby</p>
               </div>
             </div>
@@ -149,7 +149,7 @@ export default function AnuntPage({ params }: { params: Promise<{ id: string }> 
             {esteAlMeu && (
               <Link href={`/editeaza/${anunt.id}`}
                 className="w-full border border-pink-200 text-pink-500 py-3 rounded-xl text-sm font-medium hover:bg-pink-50 text-center">
-                ✏️ Editeaza anuntul
+                ✏️ Editează anunțul
               </Link>
             )}
           </div>
