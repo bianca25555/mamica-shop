@@ -22,6 +22,40 @@ const subcategoriiMap: Record<string, string[]> = {
   "Accesorii": ["Genți mamă", "Suzete", "Monitoare", "Altele"],
 };
 
+const sliderDate = [
+  {
+    titlu: "Tot ce ai nevoie ca mămică",
+    subtitlu: "Cumpără și vinde produse pentru mame și bebeluși",
+    culoare: "from-pink-100 to-rose-50",
+    imagine: "https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=600&h=400&fit=crop",
+  },
+  {
+    titlu: "Hăinuțe pentru bebeluș",
+    subtitlu: "Găsești hăinuțe de calitate la prețuri accesibile",
+    culoare: "from-blue-50 to-indigo-50",
+    imagine: "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=600&h=400&fit=crop",
+  },
+  {
+    titlu: "Jucării și accesorii",
+    subtitlu: "Tot ce are nevoie bebelușul tău pentru a crește fericit",
+    culoare: "from-yellow-50 to-orange-50",
+    imagine: "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=600&h=400&fit=crop",
+  },
+];
+
+const beneficii = [
+  { icon: "🆓", titlu: "100% Gratuit", desc: "Postarea anunțurilor este complet gratuită" },
+  { icon: "🔒", titlu: "Sigur", desc: "Platforma verificată pentru mame din România" },
+  { icon: "🚀", titlu: "Rapid", desc: "Anunțul tău apare instant pe platformă" },
+  { icon: "💬", titlu: "Chat direct", desc: "Comunică direct cu vânzătorul" },
+];
+
+const testimoniale = [
+  { nume: "Maria C.", text: "Am găsit un cărucior superb la jumătate de preț! Recomand cu drag platformă.", stele: 5 },
+  { nume: "Ana M.", text: "Am vândut hăinuțele bebelușului în doar 2 zile. Foarte ușor de folosit!", stele: 5 },
+  { nume: "Ioana P.", text: "Cea mai bună platformă pentru mame din România. Găsești orice!", stele: 5 },
+];
+
 function MesajeLink({ userId }: { userId: string }) {
   const [necitite, setNecitite] = useState(0);
   useEffect(() => {
@@ -55,11 +89,19 @@ export default function Home() {
   const [categorieFiltru, setCategorieFiltru] = useState("");
   const [subcategorieFiltru, setSubcategorieFiltru] = useState("");
   const [sortare, setSortare] = useState("recent");
+  const [slideActiv, setSlideActiv] = useState(0);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
     supabase.auth.onAuthStateChange((_event, session) => setUser(session?.user ?? null));
     fetchAnunturi();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlideActiv((prev) => (prev + 1) % sliderDate.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -91,10 +133,9 @@ export default function Home() {
   };
 
   const handleLogout = async () => { await supabase.auth.signOut(); setUser(null); };
-
   const resetFiltre = () => { setCautare(""); setCategorieFiltru(""); setSubcategorieFiltru(""); setPretMin(""); setPretMax(""); setLocatie(""); };
-
   const areFiltreActive = cautare || categorieFiltru || subcategorieFiltru || pretMin || pretMax || locatie;
+  const slide = sliderDate[slideActiv];
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -135,51 +176,39 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero cu poza */}
-      <section className="relative bg-white overflow-hidden">
+      {/* Slider Hero */}
+      <section className={`bg-gradient-to-r ${slide.culoare} transition-all duration-700`}>
         <div className="max-w-6xl mx-auto px-4 py-12 md:py-16 flex flex-col md:flex-row items-center gap-8">
           <div className="flex-1 text-center md:text-left">
-            <span className="inline-block bg-pink-50 text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+            <span className="inline-block bg-white text-pink-500 text-sm font-semibold px-3 py-1 rounded-full mb-4 shadow-sm">
               🌸 Platforma #1 pentru mame din România
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-              Cumpără și vinde<br />
-              <span className="text-pink-500">pentru mămică și bebeluș</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight transition-all duration-500">
+              {slide.titlu}
             </h1>
-            <p className="text-gray-500 mb-8 text-lg max-w-xl">
-              Un loc unde găsești tot ce ai nevoie ca mămică — de la produse noi și second-hand, până la sfaturi și o comunitate de mame ca tine.
+            <p className="text-gray-500 mb-8 text-lg transition-all duration-500">
+              {slide.subtitlu}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-              <Link href="/posteaza" className="px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 shadow-sm text-center">
+              <Link href="/posteaza" className="px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 shadow-sm text-center transition-all">
                 Postează un anunț
               </Link>
               <button onClick={() => document.getElementById("anunturi")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-8 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 text-center">
+                className="px-8 py-3 bg-white text-gray-700 rounded-xl font-semibold hover:bg-gray-50 shadow-sm text-center border border-gray-200">
                 Vezi anunțurile
               </button>
             </div>
-            {/* Stats */}
-            <div className="flex gap-6 mt-8 justify-center md:justify-start">
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{anunturi.length}+</p>
-                <p className="text-sm text-gray-400">Anunțuri active</p>
-              </div>
-              <div className="border-l border-gray-200 pl-6">
-                <p className="text-2xl font-bold text-gray-800">100%</p>
-                <p className="text-sm text-gray-400">Gratuit</p>
-              </div>
-              <div className="border-l border-gray-200 pl-6">
-                <p className="text-2xl font-bold text-gray-800">🇷🇴</p>
-                <p className="text-sm text-gray-400">România</p>
-              </div>
+            {/* Dots slider */}
+            <div className="flex gap-2 mt-8 justify-center md:justify-start">
+              {sliderDate.map((_, i) => (
+                <button key={i} onClick={() => setSlideActiv(i)}
+                  className={`w-2 h-2 rounded-full transition-all ${i === slideActiv ? "bg-pink-500 w-6" : "bg-pink-200"}`} />
+              ))}
             </div>
           </div>
-          {/* Poze */}
-          <div className="hidden md:grid grid-cols-2 gap-3 flex-shrink-0 w-80">
-            <img src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=200&h=200&fit=crop" alt="mama si bebe" className="rounded-2xl w-full h-40 object-cover" />
-            <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?w=200&h=200&fit=crop" alt="bebe" className="rounded-2xl w-full h-40 object-cover mt-6" />
-            <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=200&h=200&fit=crop" alt="jucarii" className="rounded-2xl w-full h-40 object-cover" />
-            <img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=200&h=200&fit=crop" alt="carucior" className="rounded-2xl w-full h-40 object-cover mt-6" />
+          <div className="hidden md:block flex-shrink-0">
+            <img src={slide.imagine} alt={slide.titlu}
+              className="w-80 h-64 object-cover rounded-2xl shadow-lg transition-all duration-700" />
           </div>
         </div>
       </section>
@@ -194,6 +223,19 @@ export default function Home() {
           {cautare && <button onClick={() => setCautare("")} className="text-gray-400">✕</button>}
         </div>
       </div>
+
+      {/* Beneficii */}
+      <section className="bg-white border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+          {beneficii.map((b) => (
+            <div key={b.titlu} className="text-center p-4">
+              <div className="text-3xl mb-2">{b.icon}</div>
+              <p className="font-semibold text-gray-800 text-sm">{b.titlu}</p>
+              <p className="text-gray-400 text-xs mt-1">{b.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Categorii */}
       {!areFiltreActive && (
@@ -325,8 +367,26 @@ export default function Home() {
         )}
       </section>
 
+      {/* Testimoniale */}
+      <section className="bg-white border-t border-gray-100 mt-16 py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">Ce spun mamele despre noi</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimoniale.map((t) => (
+              <div key={t.nume} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                <div className="flex gap-1 mb-3">
+                  {Array(t.stele).fill(0).map((_, i) => <span key={i} className="text-yellow-400">★</span>)}
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed mb-4">"{t.text}"</p>
+                <p className="text-gray-800 font-semibold text-sm">{t.nume}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-100 mt-16 py-8">
+      <footer className="bg-white border-t border-gray-100 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
