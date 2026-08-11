@@ -3,7 +3,13 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
 
-const categoriiCuSubcategorii: Record<string, string[]> = {
+const categorii = [
+  "Alăptat", "Burtiere și Maternitate", "Îngrijire postnatală", "Modă gravide",
+  "Hăinuțe", "Cărucioare", "Jucării", "Mobilier cameră",
+  "Hrănire", "Siguranță", "Cărți și Educație", "Accesorii",
+];
+
+const subcategoriiMap: Record<string, string[]> = {
   "Alăptat": ["Pompe de sân", "Sutiene alăptat", "Perne alăptat", "Protectoare mameloane", "Altele"],
   "Burtiere și Maternitate": ["Burtiere", "Haine gravide", "Ciorapi compresivi", "Altele"],
   "Îngrijire postnatală": ["Îngrijire cicatrice", "Produse postnatale", "Altele"],
@@ -18,7 +24,7 @@ const categoriiCuSubcategorii: Record<string, string[]> = {
   "Accesorii": ["Genți mamă", "Suzete", "Monitoare", "Altele"],
 };
 
-const categorii = Object.keys(categoriiCuSubcategorii);
+const MAX_ANUNTURI_ZI = 5;
 
 export default function Posteaza() {
   const [titlu, setTitlu] = useState("");
@@ -34,11 +40,26 @@ export default function Posteaza() {
   const [trimis, setTrimis] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [anunturiAzi, setAnunturiAzi] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      if (data.user) verificaLimita(data.user.id);
+    });
   }, []);
+
+  const verificaLimita = async (userId: string) => {
+    const azi = new Date();
+    azi.setHours(0, 0, 0, 0);
+    const { count } = await supabase
+      .from("anunturi")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .gte("created_at", azi.toISOString());
+    setAnunturiAzi(count || 0);
+  };
 
   const handlePoze = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -54,12 +75,22 @@ export default function Posteaza() {
     setPozePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const valideaza = () => {
+    if (!user) return "Trebuie să fii logat pentru a posta un anunț.";
+    if (anunturiAzi >= MAX_ANUNTURI_ZI) return `Ai atins limita de ${MAX_ANUNTURI_ZI} anunțuri pe zi. Revino mâine!`;
+    if (!titlu || !categorie || !pret || !descriere || !locatie || !telefon) return "Te rugăm să completezi toate câmpurile.";
+    if (titlu.trim().length < 10) return "Titlul trebuie să aibă minimum 10 caractere.";
+    if (descriere.trim().length < 30) return "Descrierea trebuie să aibă minimum 30 caractere.";
+    if (isNaN(parseFloat(pret)) || parseFloat(pret) <= 0) return "Prețul trebuie să fie un număr pozitiv.";
+    if (!/^07[0-9]{8}$/.test(telefon.replace(/\s/g, ""))) return "Numărul de telefon nu este valid (ex: 07xx xxx xxx).";
+    return null;
+  };
+
   const handleSubmit = async () => {
     setEroare("");
-    if (!user) { setEroare("Trebuie să fii logat pentru a posta un anunț."); return; }
-    if (!titlu || !categorie || !pret || !descriere || !locatie || !telefon) {
-      setEroare("Te rugăm să completezi toate câmpurile."); return;
-    }
+    const err = valideaza();
+    if (err) { setEroare(err); return; }
+
     setLoading(true);
     const pozeUrls: string[] = [];
     for (const poza of poze) {
@@ -69,11 +100,20 @@ export default function Posteaza() {
       const { data: urlData } = supabase.storage.from("poze-anunturi").getPublicUrl(fileName);
       pozeUrls.push(urlData.publicUrl);
     }
+
     const { error } = await supabase.from("anunturi").insert({
-      titlu, categorie, subcategorie: subcategorie || null,
-      pret: parseFloat(pret), descriere, locatie, telefon,
-      imagine: pozeUrls[0] || null, poze: pozeUrls, user_id: user.id,
+      titlu: titlu.trim(),
+      categorie,
+      subcategorie: subcategorie || null,
+      pret: parseFloat(pret),
+      descriere: descriere.trim(),
+      locatie: locatie.trim(),
+      telefon: telefon.trim(),
+      imagine: pozeUrls[0] || null,
+      poze: pozeUrls,
+      user_id: user.id,
     });
+
     setLoading(false);
     if (error) setEroare("A apărut o eroare. Încearcă din nou.");
     else setTrimis(true);
@@ -106,7 +146,11 @@ export default function Posteaza() {
             </div>
             <span className="text-xl font-bold text-gray-800">Mom<span className="text-pink-500">&</span>Baby</span>
           </Link>
-          {user && <span className="text-sm text-gray-500">{user.email}</span>}
+          {user && (
+            <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
+              {anunturiAzi}/{MAX_ANUNTURI_ZI} anunțuri astăzi
+            </span>
+          )}
         </div>
       </header>
 
@@ -122,14 +166,23 @@ export default function Posteaza() {
           </div>
         )}
 
+        {anunturiAzi >= MAX_ANUNTURI_ZI && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-600">
+            Ai atins limita de {MAX_ANUNTURI_ZI} anunțuri pe zi. Revino mâine!
+          </div>
+        )}
+
         {eroare && <div className="bg-red-50 text-red-500 text-sm px-4 py-3 rounded-xl mb-4">{eroare}</div>}
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col gap-5">
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Titlu anunț *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">
+              Titlu anunț * <span className="text-gray-300 font-normal">(min. 10 caractere)</span>
+            </label>
             <input type="text" value={titlu} onChange={(e) => setTitlu(e.target.value)}
               placeholder="ex: Cărucior Quinny Buzz, stare foarte bună"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
+            <p className="text-xs text-gray-300 mt-1">{titlu.length}/10 caractere minim</p>
           </div>
 
           <div>
@@ -141,13 +194,13 @@ export default function Posteaza() {
             </select>
           </div>
 
-          {categorie && categoriiCuSubcategorii[categorie] && (
+          {categorie && subcategoriiMap[categorie] && (
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">Subcategorie</label>
               <select value={subcategorie} onChange={(e) => setSubcategorie(e.target.value)}
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 text-gray-600">
                 <option value="">Selectează o subcategorie</option>
-                {categoriiCuSubcategorii[categorie].map((sub) => <option key={sub} value={sub}>{sub}</option>)}
+                {subcategoriiMap[categorie].map((sub) => <option key={sub} value={sub}>{sub}</option>)}
               </select>
             </div>
           )}
@@ -155,27 +208,34 @@ export default function Posteaza() {
           <div>
             <label className="text-sm font-medium text-gray-700 mb-1 block">Preț (RON) *</label>
             <input type="number" value={pret} onChange={(e) => setPret(e.target.value)}
-              placeholder="ex: 150"
+              placeholder="ex: 150" min="1"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
+
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Descriere *</label>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">
+              Descriere * <span className="text-gray-300 font-normal">(min. 30 caractere)</span>
+            </label>
             <textarea rows={4} value={descriere} onChange={(e) => setDescriere(e.target.value)}
               placeholder="Descrie produsul: stare, vârstă, dimensiuni, alte detalii relevante..."
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 resize-none" />
+            <p className="text-xs text-gray-300 mt-1">{descriere.length}/30 caractere minim</p>
           </div>
+
           <div>
             <label className="text-sm font-medium text-gray-700 mb-1 block">Localitate *</label>
             <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)}
               placeholder="ex: Cluj-Napoca, București, Timișoara"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
+
           <div>
             <label className="text-sm font-medium text-gray-700 mb-1 block">Număr de telefon *</label>
             <input type="tel" value={telefon} onChange={(e) => setTelefon(e.target.value)}
               placeholder="ex: 07xx xxx xxx"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100" />
           </div>
+
           <div>
             <label className="text-sm font-medium text-gray-700 mb-2 block">Fotografii ({poze.length}/5)</label>
             <input type="file" accept="image/*" multiple ref={fileInputRef} onChange={handlePoze} className="hidden" />
@@ -199,7 +259,8 @@ export default function Posteaza() {
               </div>
             )}
           </div>
-          <button onClick={handleSubmit} disabled={loading}
+
+          <button onClick={handleSubmit} disabled={loading || anunturiAzi >= MAX_ANUNTURI_ZI}
             className="w-full bg-pink-500 text-white py-3 rounded-xl font-semibold hover:bg-pink-600 text-sm disabled:opacity-50 mt-2">
             {loading ? "Se salvează..." : "Postează anunțul"}
           </button>
